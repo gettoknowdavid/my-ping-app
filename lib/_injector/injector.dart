@@ -1,5 +1,5 @@
 import 'package:flutter/foundation.dart';
-import 'package:ping/ping.dart';
+import 'package:ping/_ping.dart';
 
 import 'injector.config.dart';
 

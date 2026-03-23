@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:ping/_injector/injector.dart';
-import 'package:ping/ping.dart';
+import 'package:ping/_ping.dart';
 
 part 'router.g.dart';
 

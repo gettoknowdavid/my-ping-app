@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:ping/_injector/injector.dart';
 import 'package:ping/app.dart';
-import 'package:ping/locator.dart';
 
-void main() {
+Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  configureDependencies();
+  await configureDependencies();
   runApp(const MyApp());
 }

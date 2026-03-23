@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:ping/_injector/injector.dart';
 import 'package:ping/ping.dart';
 
 part 'router.g.dart';
 
+@mobile
 @lazySingleton
 class PingRouter {
   PingRouter._() : config = _buildConfig();

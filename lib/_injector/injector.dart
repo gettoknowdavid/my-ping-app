@@ -3,16 +3,19 @@ import 'package:ping/ping.dart';
 
 import 'injector.config.dart';
 
-const mobileEnv = Environment('platform.mobile');
-const webEnv = Environment('platform.web');
+const mobile = Environment('mobile');
+const web = Environment('web');
 
 @InjectableInit(generateAccessors: true)
-Future<void> _configInjector(
-  String env, {
-  EnvironmentFilter? envFilter,
-}) async => di.init(environment: env, environmentFilter: envFilter);
+Future<GetIt> _configInjector(String environment) async {
+  final buildEnv = kDebugMode ? Environment.dev : Environment.prod;
+  return di.init(
+    environment: environment,
+    environmentFilter: NoEnvOrContainsAny({environment, buildEnv}),
+  );
+}
 
-Future<void> configureDependencies() async {
-  if (kIsWeb) return _configInjector(webEnv.name);
-  return _configInjector(mobileEnv.name);
+Future<GetIt> configureDependencies() async {
+  if (kIsWeb) return _configInjector(web.name);
+  return _configInjector(mobile.name);
 }

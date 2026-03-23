@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_it/flutter_it.dart';
 import 'package:ping/_routing/_routing.dart';
+import 'package:ping/ping.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 
 class MyApp extends StatelessWidget {

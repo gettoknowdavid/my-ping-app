@@ -1,7 +1,6 @@
-import 'package:flutter_it/flutter_it.dart';
-import 'package:ping/_routing/_routing.dart';
+import 'package:ping/ping.dart';
 
-void configureDependencies() {
-  di.pushNewScope(scopeName: 'root');
-  di.registerLazySingleton(() => PingRouter.create());
-}
+import 'locator.config.dart';
+
+@InjectableInit()
+void configureDependencies() => di.init();

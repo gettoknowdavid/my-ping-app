@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
+import 'package:ping/ping.dart';
 
 part 'router.g.dart';
 
-final class PingRouter {
+@lazySingleton
+class PingRouter {
   PingRouter._() : config = _buildConfig();
 
   final GoRouter config;
 
+  @factoryMethod
   factory PingRouter.create() {
     assert(_instance == null, 'PingRouter cannot be created more than once');
     return _instance = PingRouter._();

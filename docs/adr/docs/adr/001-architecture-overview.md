@@ -23,4 +23,4 @@ Organize code by features, not by layer.
 + Clear separation of concerns
 + Reactive UI without boilerplate
 + Easy to test with `get_it` scopes
-+ Requires discipline to not bypass manager layer
++ Requires discipline to not bypass the manager layer

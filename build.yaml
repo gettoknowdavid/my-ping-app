@@ -1,0 +1,7 @@
+# build.yaml
+targets:
+  $default:
+    builders:
+      go_router_builder:
+        generate_for:
+          - lib/_routing/router.dart

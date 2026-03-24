@@ -10,4 +10,7 @@ abstract class RegisterModule {
       anonKey: Env.supabaseAnonKey,
     );
   }
+
+  @Singleton(dependsOn: [Supabase])
+  SupabaseClient get supabaseClient => Supabase.instance.client;
 }

@@ -7,7 +7,7 @@ abstract class RegisterModule {
   Future<Supabase> get supabase {
     return Supabase.initialize(
       url: Env.supabaseUrl,
-      anonKey: Env.supabaseAnonKey,
+      anonKey: Env.supabasePublishableKey,
     );
   }
 

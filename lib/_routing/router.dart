@@ -7,15 +7,15 @@ part 'router.g.dart';
 @mobile
 @lazySingleton
 class PingRouter {
-  PingRouter._() : config = _buildConfig();
-
-  final GoRouter config;
-
   @factoryMethod
   factory PingRouter.create() {
     assert(_instance == null, 'PingRouter cannot be created more than once');
     return _instance = PingRouter._();
   }
+
+  PingRouter._() : config = _buildConfig();
+
+  final GoRouter config;
 
   static PingRouter? _instance;
 
@@ -35,6 +35,6 @@ class RootRoute extends GoRouteData with $RootRoute {
 
   @override
   Widget build(BuildContext context, GoRouterState state) {
-    return Scaffold(body: Center(child: CircularProgressIndicator()));
+    return const Scaffold(body: Center(child: CircularProgressIndicator()));
   }
 }

@@ -7,6 +7,6 @@ abstract class Env {
   @EnviedField(varName: 'SUPABASE_URL')
   static final String supabaseUrl = _Env.supabaseUrl;
 
-  @EnviedField(varName: 'SUPABASE_ANON_KEY')
-  static final String supabaseAnonKey = _Env.supabaseAnonKey;
+  @EnviedField(varName: 'SUPABASE_PUBLISHABLE_KEY')
+  static final String supabasePublishableKey = _Env.supabasePublishableKey;
 }

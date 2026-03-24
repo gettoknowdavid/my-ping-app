@@ -123,3 +123,4 @@ app.*.symbols
 **.freezed.dart
 **.g.dart
 **.env
+/supadart.yaml

@@ -122,3 +122,4 @@ app.*.symbols
 **.config.dart
 **.freezed.dart
 **.g.dart
+**.env

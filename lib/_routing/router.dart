@@ -1,19 +1,19 @@
 import 'package:flutter/material.dart';
-import 'package:ping/_injector/injector.dart';
 import 'package:ping/_ping.dart';
+import 'package:ping/features/auth/manager/auth_manager.dart';
+import 'package:ping/features/auth/model/auth_status.dart';
 
 part 'router.g.dart';
 
-@mobile
-@lazySingleton
+@Singleton(dependsOn: [AuthManager])
 class PingRouter {
   @factoryMethod
-  factory PingRouter.create() {
+  factory PingRouter.create(AuthManager auth) {
     assert(_instance == null, 'PingRouter cannot be created more than once');
-    return _instance = PingRouter._();
+    return _instance = PingRouter._(auth);
   }
 
-  PingRouter._() : config = _buildConfig();
+  PingRouter._(AuthManager auth) : config = _buildConfig(auth);
 
   final GoRouter config;
 
@@ -24,8 +24,21 @@ class PingRouter {
     return _instance!;
   }
 
-  static GoRouter _buildConfig() {
-    return GoRouter(routes: $appRoutes);
+  static GoRouter _buildConfig(AuthManager auth) {
+    return GoRouter(
+      routes: $appRoutes,
+      refreshListenable: auth.status,
+      redirect: (context, state) {
+        final status = auth.status.value;
+        final isAuthRoute = state.matchedLocation.startsWith('/auth');
+        return switch (status) {
+          Unauthenticated() => '/auth/phone',
+          AwaitingOtp() => '/auth/otp',
+          Onboarding() => '/auth/onboarding',
+          Authenticated() => isAuthRoute ? '/' : null,
+        };
+      },
+    );
   }
 }
 

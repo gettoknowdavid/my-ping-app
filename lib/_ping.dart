@@ -6,5 +6,6 @@ export 'package:go_router/go_router.dart';
 export 'package:injectable/injectable.dart';
 export 'package:json_annotation/json_annotation.dart';
 export 'package:listen_it/listen_it.dart';
+export 'package:shadcn_ui/shadcn_ui.dart';
 export 'package:supabase_flutter/supabase_flutter.dart';
 export 'package:watch_it/watch_it.dart';

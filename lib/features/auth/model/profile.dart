@@ -22,27 +22,27 @@ abstract class Profile with _$Profile implements DbModel<Profile> {
   factory Profile.fromJson(Map<String, Object?> json) =>
       _$ProfileFromJson(json);
 
-  static String get table_name => 'profiles';
+  static String get tableName => 'profiles';
 
-  static String get c_id => 'id';
+  static String get cId => 'id';
 
-  static String get c_username => 'username';
+  static String get cUsername => 'username';
 
-  static String get c_displayName => 'display_name';
+  static String get cDisplayName => 'display_name';
 
-  static String get c_avatarUrl => 'avatar_url';
+  static String get cAvatarUrl => 'avatar_url';
 
-  static String get c_about => 'about';
+  static String get cAbout => 'about';
 
-  static String get c_phone => 'phone';
+  static String get cPhone => 'phone';
 
-  static String get c_createdAt => 'created_at';
+  static String get cCreatedAt => 'created_at';
 
-  static String get c_updatedAt => 'updated_at';
+  static String get cUpdatedAt => 'updated_at';
 
-  static String get c_deletedAt => 'deleted_at';
+  static String get cDeletedAt => 'deleted_at';
 
-  static String get c_version => 'version';
+  static String get cVersion => 'version';
 
   static List<Profile> converter(List<Map<String, dynamic>> data) {
     return data.map(Profile.fromJson).toList();

@@ -5,9 +5,9 @@ import 'package:ping/_injector/_user_scope.dart';
 import 'package:ping/_ping.dart';
 import 'package:ping/_shared/managers/toast_manager.dart';
 import 'package:ping/features/auth/model/_model.dart';
-import 'package:ping/features/auth/services/_services.dart';
+import 'package:ping/features/auth/services/auth_service.dart';
 
-@Singleton(dependsOn: [AuthService])
+@singleton
 class AuthManager extends ChangeNotifier implements Disposable {
   AuthManager({
     required AuthService service,
@@ -40,20 +40,6 @@ class AuthManager extends ChangeNotifier implements Disposable {
       }
 
       _status.value = incoming;
-    });
-
-    // Listen to errors
-    sendOtp.errors.listen((error, _) {
-      final message = error?.error.toString() ?? 'Error sending OTP';
-      _toast.error(message);
-    });
-    verifyOtp.errors.listen((error, _) {
-      final message = error?.error.toString() ?? 'Error verifying OTP';
-      _toast.error(message);
-    });
-    completeOnboarding.errors.listen((error, _) {
-      final msg = error?.error.toString() ?? 'Failed to complete onboarding';
-      _toast.error(msg);
     });
 
     // Initialize commands
@@ -93,6 +79,20 @@ class AuthManager extends ChangeNotifier implements Disposable {
       },
       errorFilter: const GlobalIfNoLocalErrorFilter(),
     );
+
+    // Listen to errors
+    sendOtp.errors.listen((error, _) {
+      final message = error?.error.toString() ?? 'Error sending OTP';
+      _toast.error(message);
+    });
+    verifyOtp.errors.listen((error, _) {
+      final message = error?.error.toString() ?? 'Error verifying OTP';
+      _toast.error(message);
+    });
+    completeOnboarding.errors.listen((error, _) {
+      final msg = error?.error.toString() ?? 'Failed to complete onboarding';
+      _toast.error(msg);
+    });
 
     // Handle initial check before `authStatusChanges` stream is fired
     final session = _service.currentSession;

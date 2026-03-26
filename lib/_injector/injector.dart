@@ -5,13 +5,10 @@ import 'package:ping/_ping.dart';
 const mobile = Environment('mobile');
 const web = Environment('web');
 
-@InjectableInit(generateAccessors: true)
+@InjectableInit()
 Future<GetIt> _configInjector(String environment) async {
-  const buildEnv = kDebugMode ? Environment.dev : Environment.prod;
-  return di.init(
-    environment: environment,
-    environmentFilter: NoEnvOrContainsAny({environment, buildEnv}),
-  );
+  const env = kDebugMode ? Environment.dev : Environment.prod;
+  return di.init(environmentFilter: NoEnvOrContainsAny({environment, env}));
 }
 
 Future<GetIt> configureDependencies() async {

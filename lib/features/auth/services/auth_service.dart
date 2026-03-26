@@ -5,7 +5,7 @@ import 'package:ping/_ping.dart';
 import 'package:ping/_shared/models/_models.dart';
 import 'package:ping/features/auth/model/_model.dart';
 
-@LazySingleton()
+@singleton
 class AuthService {
   const AuthService(this._client);
 

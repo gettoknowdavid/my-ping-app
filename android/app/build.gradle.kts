@@ -7,8 +7,8 @@ plugins {
 
 android {
     namespace = "com.gettoknowdavid.ping"
-    compileSdk = flutter.compileSdkVersion
-    ndkVersion = flutter.ndkVersion
+    compileSdk = (rootProject.property("compileSdk") as String).toInt()
+    ndkVersion = rootProject.property("ndkVersion") as String
 
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17

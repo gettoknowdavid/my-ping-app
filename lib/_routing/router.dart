@@ -5,7 +5,7 @@ import 'package:ping/features/auth/model/auth_status.dart';
 
 part 'router.g.dart';
 
-@Singleton(dependsOn: [AuthManager])
+@Singleton(order: 99)
 class PingRouter {
   @factoryMethod
   factory PingRouter.create(AuthManager auth) {

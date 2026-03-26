@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:ping/_ping.dart';
 
-@singleton
+@Singleton(order: -1)
 class ToastManager {
   BuildContext? _context;
 

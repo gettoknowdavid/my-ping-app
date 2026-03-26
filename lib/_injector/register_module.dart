@@ -11,6 +11,6 @@ abstract class RegisterModule {
     );
   }
 
-  @Singleton(dependsOn: [Supabase])
+  @singleton
   SupabaseClient get supabaseClient => Supabase.instance.client;
 }

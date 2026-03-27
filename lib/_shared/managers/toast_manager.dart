@@ -3,20 +3,10 @@ import 'package:ping/_ping.dart';
 
 @Singleton(order: -1)
 class ToastManager {
-  BuildContext? _context;
-
-  set context(BuildContext context) {
-    _context = context;
-  }
-
-  BuildContext get context {
-    final ctx = _context;
-    if (ctx != null && ctx.mounted) return ctx;
-    throw Exception('No BuildContext found');
-  }
+  final toasterKey = GlobalKey<ShadToasterState>();
 
   void show(String message, {String? description, Widget? action}) {
-    ShadToaster.of(context).show(
+    toasterKey.currentState?.show(
       ShadToast(
         title: Text(message),
         description: description != null ? Text(description) : null,
@@ -26,7 +16,9 @@ class ToastManager {
   }
 
   void error(String message, {String? description, Widget? action}) {
-    ShadToaster.of(context).show(
+    print(message);
+    print(description);
+    toasterKey.currentState?.show(
       ShadToast.destructive(
         title: Text(message),
         description: description != null ? Text(description) : null,

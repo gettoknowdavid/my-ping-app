@@ -8,6 +8,7 @@ environment:
   sdk: ^3.11.1
 
 dependencies:
+  cached_network_image: ^3.4.1
   command_it: ^9.5.1
   envied: ^1.3.4
   equatable: ^2.0.8
@@ -16,7 +17,10 @@ dependencies:
   freezed_annotation: ^3.1.0
   get_it: ^9.2.1
   go_router: ^17.1.0
+  image_cropper: ^12.1.0
+  image_picker: ^1.2.1
   injectable: ^2.7.1+4
+  intl_mobile_field: ^2.1.4
   json_annotation: ^4.11.0
   listen_it: ^5.3.5
   shadcn_ui: ^0.52.1
@@ -34,6 +38,16 @@ dev_dependencies:
   injectable_generator: ^2.12.1
   json_serializable: ^6.13.0
   very_good_analysis: ^10.2.0
+
+flutter_gen:
+  output: lib/_shared/theme/assets
+  integrations:
+    image: true
+    flutter_svg: true
+
+  colors:
+    inputs:
+      - assets/colors/colors.xml
 
 flutter:
   uses-material-design: true

@@ -12,7 +12,6 @@ abstract class Profile with _$Profile implements DbModel<Profile> {
     required int version,
     @JsonKey(name: 'created_at') required DateTime createdAt,
     @JsonKey(name: 'updated_at') required DateTime updatedAt,
-    String? username,
     @JsonKey(name: 'display_name') String? displayName,
     @JsonKey(name: 'avatar_url') String? avatarUrl,
     @JsonKey(name: 'deleted_at') DateTime? deletedAt,
@@ -25,8 +24,6 @@ abstract class Profile with _$Profile implements DbModel<Profile> {
   static String get tableName => 'profiles';
 
   static String get cId => 'id';
-
-  static String get cUsername => 'username';
 
   static String get cDisplayName => 'display_name';
 
@@ -50,7 +47,6 @@ abstract class Profile with _$Profile implements DbModel<Profile> {
 
   static Map<String, dynamic> _generateMap({
     String? id,
-    String? username,
     String? displayName,
     String? avatarUrl,
     String? about,
@@ -62,7 +58,6 @@ abstract class Profile with _$Profile implements DbModel<Profile> {
   }) {
     return {
       'id': ?id,
-      'username': ?username,
       'display_name': ?displayName,
       'avatar_url': ?avatarUrl,
       'about': ?about,
@@ -75,7 +70,6 @@ abstract class Profile with _$Profile implements DbModel<Profile> {
   }
 
   static Map<String, dynamic> insert({
-    required String username,
     required String phone,
     String? id,
     String? displayName,
@@ -88,7 +82,6 @@ abstract class Profile with _$Profile implements DbModel<Profile> {
   }) {
     return _generateMap(
       id: id,
-      username: username,
       displayName: displayName,
       avatarUrl: avatarUrl,
       about: about,
@@ -102,7 +95,6 @@ abstract class Profile with _$Profile implements DbModel<Profile> {
 
   static Map<String, dynamic> update({
     String? id,
-    String? username,
     String? displayName,
     String? avatarUrl,
     String? about,
@@ -114,7 +106,6 @@ abstract class Profile with _$Profile implements DbModel<Profile> {
   }) {
     return _generateMap(
       id: id,
-      username: username,
       displayName: displayName,
       avatarUrl: avatarUrl,
       about: about,

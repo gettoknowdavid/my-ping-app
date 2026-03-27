@@ -1,16 +1,12 @@
-import 'package:ping/_core/env.dart';
+import 'package:image_cropper/image_cropper.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:ping/_ping.dart';
 
 @module
 abstract class RegisterModule {
-  @preResolve
-  Future<Supabase> get supabase {
-    return Supabase.initialize(
-      url: Env.supabaseUrl,
-      anonKey: Env.supabasePublishableKey,
-    );
-  }
+  @lazySingleton
+  ImagePicker get imagePicker => ImagePicker();
 
-  @singleton
-  SupabaseClient get supabaseClient => Supabase.instance.client;
+  @lazySingleton
+  ImageCropper get imageCropper => ImageCropper();
 }

@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'package:ping/_injector/_user_scope.dart';
 import 'package:ping/_ping.dart';
-import 'package:ping/_shared/managers/toast_manager.dart';
+import 'package:ping/_shared/_shared.dart';
 import 'package:ping/features/auth/model/_model.dart';
 import 'package:ping/features/auth/services/auth_service.dart';
 
@@ -18,6 +18,7 @@ class AuthManager extends ChangeNotifier implements Disposable {
   final AuthService _service;
   final ToastManager _toast;
 
+  final phoneNumber = ValueNotifier<String?>(null);
   final _status = ValueNotifier<AuthStatus>(const .unauthenticated());
 
   ValueListenable<AuthStatus> get status => _status;
@@ -43,18 +44,19 @@ class AuthManager extends ChangeNotifier implements Disposable {
     });
 
     // Initialize commands
-    sendOtp = Command.createAsyncNoResult<String>(
+    submitPhoneNumber = .createAsyncNoResult<String>(
       (phone) async {
         await _service.sendOtp(phone);
+        phoneNumber.value = phone;
         _status.value = .awaitingOtp(phone);
       },
-      errorFilter: const GlobalIfNoLocalErrorFilter(),
+      errorFilter: const LocalErrorFilter(),
     );
-    verifyOtp = Command.createSyncNoResult<VerifyOtpParams>(
+    verifyPhoneNumber = .createAsyncNoResult<VerifyOtpArgs>(
       (params) async {
         final session = await _service.verifyOtp(params);
         final profile = await _service.fetchProfile(session.user.id);
-        if (profile?.username != null) {
+        if (profile?.displayName != null) {
           UserScope.pushScope(profile!);
           _status.value = .authenticated(profile);
         } else {
@@ -63,7 +65,7 @@ class AuthManager extends ChangeNotifier implements Disposable {
       },
       errorFilter: const GlobalIfNoLocalErrorFilter(),
     );
-    completeOnboarding = Command.createSyncNoResult<NewProfileParams>(
+    completeOnboarding = .createAsyncNoResult<NewProfileArgs>(
       (params) async {
         final profile = await _service.createProfile(params);
         UserScope.pushScope(profile);
@@ -71,7 +73,7 @@ class AuthManager extends ChangeNotifier implements Disposable {
       },
       errorFilter: const GlobalIfNoLocalErrorFilter(),
     );
-    signOut = Command.createAsyncNoParamNoResult(
+    signOut = .createAsyncNoParamNoResult(
       () async {
         await _service.signOut();
         await UserScope.popScope();
@@ -81,24 +83,24 @@ class AuthManager extends ChangeNotifier implements Disposable {
     );
 
     // Listen to errors
-    sendOtp.errors.listen((error, _) {
-      final message = error?.error.toString() ?? 'Error sending OTP';
-      _toast.error(message);
+    submitPhoneNumber.errors.listen((errors, _) {
+      final message = errors?.error.message;
+      _toast.error('Authentication Error', description: message);
     });
-    verifyOtp.errors.listen((error, _) {
-      final message = error?.error.toString() ?? 'Error verifying OTP';
-      _toast.error(message);
+    verifyPhoneNumber.errors.listen((errors, _) {
+      final message = errors?.error.message;
+      _toast.error('Authentication Error', description: message);
     });
-    completeOnboarding.errors.listen((error, _) {
-      final msg = error?.error.toString() ?? 'Failed to complete onboarding';
-      _toast.error(msg);
+    completeOnboarding.errors.listen((errors, _) {
+      final message = errors?.error.message;
+      _toast.error('Authentication Error', description: message);
     });
 
     // Handle initial check before `authStatusChanges` stream is fired
     final session = _service.currentSession;
     if (session != null) {
       final profile = await _service.fetchProfile(session.user.id);
-      if (profile?.username != null) {
+      if (profile?.displayName != null) {
         UserScope.pushScope(profile!);
         _status.value = .authenticated(profile);
       } else {
@@ -109,15 +111,15 @@ class AuthManager extends ChangeNotifier implements Disposable {
 
   // Sends OTP — transitions to awaitingOtp so the router
   // navigates to the OTP screen automatically via refreshListenable.
-  late final Command<String, void> sendOtp;
+  late final Command<String, void> submitPhoneNumber;
 
   // Verifies OTP — on success, determines onboarding vs authenticated.
   // Router reacts automatically — no manual navigation needed here.
-  late final Command<VerifyOtpParams, void> verifyOtp;
+  late final Command<VerifyOtpArgs, void> verifyPhoneNumber;
 
   // Completes onboarding — creates profile row, optionally uploads avatar,
   // then transitions to authenticated and pushes user scope.
-  late final Command<NewProfileParams, void> completeOnboarding;
+  late final Command<NewProfileArgs, void> completeOnboarding;
 
   // Signs out — pops user scope (disposes all user-scope services),
   // resets status. Router reacts automatically.
@@ -128,10 +130,11 @@ class AuthManager extends ChangeNotifier implements Disposable {
     await _subscription?.cancel();
     _subscription = null;
 
+    phoneNumber.dispose();
     _status.dispose();
 
-    sendOtp.dispose();
-    verifyOtp.dispose();
+    submitPhoneNumber.dispose();
+    verifyPhoneNumber.dispose();
     completeOnboarding.dispose();
     signOut.dispose();
 

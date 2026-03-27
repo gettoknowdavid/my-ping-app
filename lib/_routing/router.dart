@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:ping/_ping.dart';
 import 'package:ping/features/auth/manager/auth_manager.dart';
 import 'package:ping/features/auth/model/auth_status.dart';
+import 'package:ping/features/auth/pages/_pages.dart';
 
 part 'router.g.dart';
 
@@ -32,9 +33,9 @@ class PingRouter {
         final status = auth.status.value;
         final isAuthRoute = state.matchedLocation.startsWith('/auth');
         return switch (status) {
-          Unauthenticated() => '/auth/phone',
-          AwaitingOtp() => '/auth/otp',
-          Onboarding() => '/auth/onboarding',
+          Unauthenticated() => const PhoneEntryRoute().location,
+          AwaitingOtp() => const PhoneVerificationRoute().location,
+          Onboarding() => const AccountOnboardingRoute().location,
           Authenticated() => isAuthRoute ? '/' : null,
         };
       },
@@ -49,5 +50,35 @@ class RootRoute extends GoRouteData with $RootRoute {
   @override
   Widget build(BuildContext context, GoRouterState state) {
     return const Scaffold(body: Center(child: CircularProgressIndicator()));
+  }
+}
+
+@TypedGoRoute<PhoneEntryRoute>(path: '/auth/phone')
+class PhoneEntryRoute extends GoRouteData with $PhoneEntryRoute {
+  const PhoneEntryRoute();
+
+  @override
+  Widget build(BuildContext context, GoRouterState state) {
+    return const PhoneEntryPage();
+  }
+}
+
+@TypedGoRoute<PhoneVerificationRoute>(path: '/auth/phone/verify')
+class PhoneVerificationRoute extends GoRouteData with $PhoneVerificationRoute {
+  const PhoneVerificationRoute();
+
+  @override
+  Widget build(BuildContext context, GoRouterState state) {
+    return const PhoneVerificationPage();
+  }
+}
+
+@TypedGoRoute<AccountOnboardingRoute>(path: '/auth/onboarding')
+class AccountOnboardingRoute extends GoRouteData with $AccountOnboardingRoute {
+  const AccountOnboardingRoute();
+
+  @override
+  Widget build(BuildContext context, GoRouterState state) {
+    return const AccountOnboardingPage();
   }
 }

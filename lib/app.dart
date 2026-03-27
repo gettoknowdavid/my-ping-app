@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:ping/_ping.dart';
 import 'package:ping/_routing/_routing.dart';
-import 'package:ping/_shared/widgets/toast_connector.dart';
+import 'package:ping/_shared/_shared.dart';
 
 class PingApp extends WatchingWidget {
   const PingApp({super.key});
@@ -18,6 +18,9 @@ class PingApp extends WatchingWidget {
       final error = snapshot.error;
       return ShadApp(
         title: 'Ping',
+        themeMode: ThemeMode.dark,
+        theme: PingTheme.theme,
+        darkTheme: PingTheme.darkTheme,
         home: Scaffold(
           body: ShadCard(title: Text(error.toString())),
         ),
@@ -27,6 +30,9 @@ class PingApp extends WatchingWidget {
     if (snapshot.connectionState != ConnectionState.done) {
       return ShadApp(
         title: 'Ping',
+        themeMode: ThemeMode.dark,
+        theme: PingTheme.theme,
+        darkTheme: PingTheme.darkTheme,
         home: Scaffold(
           body: Center(
             child: const Icon(LucideIcons.loaderCircle)
@@ -37,14 +43,37 @@ class PingApp extends WatchingWidget {
       );
     }
 
-    return ShadApp.custom(
-      appBuilder: (context) => MaterialApp.router(
-        title: 'Ping',
-        routerConfig: di<PingRouter>().config,
-        builder: (context, child) {
-          return ShadAppBuilder(child: ToastConnector(child: child));
-        },
+    return ShadApp.router(
+      title: 'Ping',
+      themeMode: ThemeMode.dark,
+      theme: PingTheme.theme,
+      darkTheme: PingTheme.darkTheme,
+      routerConfig: di<PingRouter>().config,
+      builder: (context, child) => ShadToaster(
+        key: di<ToastManager>().toasterKey,
+        child: child ?? const SizedBox.shrink(),
       ),
     );
+
+    // return ShadApp.custom(
+    //   darkTheme: ShadThemeData(
+    //     brightness: Brightness.dark,
+    //     colorScheme: const ShadBlueColorScheme.dark(),
+    //   ),
+    //   theme: ShadThemeData(
+    //     brightness: Brightness.light,
+    //     colorScheme: const ShadBlueColorScheme.light(),
+    //   ),
+    //   themeMode: ThemeMode.dark,
+    //   appBuilder: (context) => MaterialApp.router(
+    //     debugShowCheckedModeBanner: false,
+    //     title: 'Ping',
+    //     routerConfig: di<PingRouter>().config,
+    //     builder: (context, child) {
+    //       return ShadAppBuilder(child: ToastConnector(child: child));
+    //     },
+    //     theme: Theme.of(context),
+    //   ),
+    // );
   }
 }

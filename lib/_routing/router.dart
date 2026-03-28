@@ -3,12 +3,11 @@ import 'package:ping/_ping.dart';
 import 'package:ping/features/auth/manager/auth_manager.dart';
 import 'package:ping/features/auth/model/auth_status.dart';
 import 'package:ping/features/auth/pages/_pages.dart';
+import 'package:ping/features/auth/pages/home_page.dart';
 
 part 'router.g.dart';
 
-@Singleton(order: 99)
 class PingRouter {
-  @factoryMethod
   factory PingRouter.create(AuthManager auth) {
     assert(_instance == null, 'PingRouter cannot be created more than once');
     return _instance = PingRouter._(auth);
@@ -36,20 +35,10 @@ class PingRouter {
           Unauthenticated() => const PhoneEntryRoute().location,
           AwaitingOtp() => const PhoneVerificationRoute().location,
           Onboarding() => const AccountOnboardingRoute().location,
-          Authenticated() => isAuthRoute ? '/' : null,
+          Authenticated() => isAuthRoute ? const HomeRoute().location : null,
         };
       },
     );
-  }
-}
-
-@TypedGoRoute<RootRoute>(path: '/')
-class RootRoute extends GoRouteData with $RootRoute {
-  const RootRoute();
-
-  @override
-  Widget build(BuildContext context, GoRouterState state) {
-    return const Scaffold(body: Center(child: CircularProgressIndicator()));
   }
 }
 
@@ -80,5 +69,15 @@ class AccountOnboardingRoute extends GoRouteData with $AccountOnboardingRoute {
   @override
   Widget build(BuildContext context, GoRouterState state) {
     return const AccountOnboardingPage();
+  }
+}
+
+@TypedGoRoute<HomeRoute>(path: '/')
+class HomeRoute extends GoRouteData with $HomeRoute {
+  const HomeRoute();
+
+  @override
+  Widget build(BuildContext context, GoRouterState state) {
+    return const HomePage();
   }
 }

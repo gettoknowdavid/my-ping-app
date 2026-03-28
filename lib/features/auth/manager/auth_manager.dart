@@ -7,7 +7,6 @@ import 'package:ping/_shared/_shared.dart';
 import 'package:ping/features/auth/model/_model.dart';
 import 'package:ping/features/auth/services/auth_service.dart';
 
-@singleton
 class AuthManager extends ChangeNotifier implements Disposable {
   AuthManager({
     required AuthService service,
@@ -25,7 +24,6 @@ class AuthManager extends ChangeNotifier implements Disposable {
 
   StreamSubscription<AuthStatus>? _subscription;
 
-  @PostConstruct(preResolve: true)
   Future<void> initialize() async {
     // Listen to the changes on the auth state from Supabase
     _subscription = _service.authStatusChanges.listen((incoming) async {

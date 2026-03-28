@@ -43,7 +43,7 @@ class AccountOnboardingPage extends WatchingWidget {
           actions: [
             ShadIconButton.ghost(
               icon: const Icon(LucideIcons.ellipsisVertical),
-              onPressed: () {},
+              onPressed: () => AccountOnboardingOptionsModal.show(context),
             ),
           ],
         ),
@@ -155,6 +155,52 @@ class _AvatarField extends WatchingWidget {
             ),
           ),
       ],
+    );
+  }
+}
+
+class AccountOnboardingOptionsModal extends StatelessWidget {
+  const AccountOnboardingOptionsModal._() : super(key: null);
+
+  static Future<void> show(BuildContext context) => showShadSheet<void>(
+    context: context,
+    useRootNavigator: true,
+    side: ShadSheetSide.bottom,
+    builder: (_) => const AccountOnboardingOptionsModal._(),
+  );
+
+  @override
+  Widget build(BuildContext context) {
+    final colors = ShadTheme.of(context).colorScheme;
+    return Padding(
+      padding: const .fromLTRB(16, 0, 16, 16),
+      child: ShadSheet(
+        child: Column(
+          crossAxisAlignment: .stretch,
+          children: [
+            const SizedBox(height: 16),
+            ShadButton.ghost(
+              crossAxisAlignment: .center,
+              mainAxisAlignment: .start,
+              onPressed: () async {
+                await Supabase.instance.client.auth.refreshSession();
+              },
+              leading: const Icon(LucideIcons.refreshCcw),
+              child: const Text('Refresh'),
+            ),
+            const SizedBox(height: 16),
+            ShadButton.ghost(
+              crossAxisAlignment: .center,
+              mainAxisAlignment: .start,
+              foregroundColor: colors.destructive,
+              backgroundColor: colors.destructive.withValues(alpha: 0.2),
+              onPressed: () async => Supabase.instance.client.auth.signOut(),
+              leading: const Icon(LucideIcons.logOut),
+              child: const Text('Log out'),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }

@@ -1,22 +1,27 @@
 import 'package:ping/_core/env.dart';
 import 'package:ping/_ping.dart';
 
-@Singleton()
 class DatabaseService {
-  DatabaseService();
+  DatabaseService._();
 
   late final SupabaseClient _client;
 
-  @PostConstruct(preResolve: true)
-  Future<void> initialize() async {
+  static Future<DatabaseService> initialize() async {
+    final service = DatabaseService._();
     await Supabase.initialize(
       url: Env.supabaseUrl,
       anonKey: Env.supabasePublishableKey,
     );
-    _client = Supabase.instance.client;
+    service._client = Supabase.instance.client;
+
+    assert(() {
+      // Uncomment only when you need to force-clear local session:
+      // await service._client.auth.signOut();
+      return true;
+    }(), 'Supabase session not cleared');
+
+    return service;
   }
 
-  GoTrueClient get auth => _client.auth;
-  SupabaseStorageClient get storage => _client.storage;
-  SupabaseQueryBuilder from(String table) => _client.from(table);
+  SupabaseClient get client => _client;
 }

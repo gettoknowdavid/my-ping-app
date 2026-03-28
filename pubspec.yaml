@@ -19,7 +19,6 @@ dependencies:
   go_router: ^17.1.0
   image_cropper: ^12.1.0
   image_picker: ^1.2.1
-  injectable: ^2.7.1+4
   intl_mobile_field: ^2.1.4
   json_annotation: ^4.11.0
   listen_it: ^5.3.5
@@ -35,7 +34,6 @@ dev_dependencies:
     sdk: flutter
   freezed: ^3.2.5
   go_router_builder: ^4.2.0
-  injectable_generator: ^2.12.1
   json_serializable: ^6.13.0
   very_good_analysis: ^10.2.0
 

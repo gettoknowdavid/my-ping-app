@@ -4,6 +4,7 @@ import 'package:ping/features/auth/manager/auth_manager.dart';
 import 'package:ping/features/auth/model/auth_status.dart';
 import 'package:ping/features/auth/pages/_pages.dart';
 import 'package:ping/features/auth/pages/home_page.dart';
+import 'package:ping/features/contacts/contacts.dart';
 
 part 'router.g.dart';
 
@@ -79,5 +80,15 @@ class HomeRoute extends GoRouteData with $HomeRoute {
   @override
   Widget build(BuildContext context, GoRouterState state) {
     return const HomePage();
+  }
+}
+
+@TypedGoRoute<ContactSearchRoute>(path: '/contacts/search')
+class ContactSearchRoute extends GoRouteData with $ContactSearchRoute {
+  const ContactSearchRoute();
+
+  @override
+  Widget build(BuildContext context, GoRouterState state) {
+    return const ContactSearchPage();
   }
 }

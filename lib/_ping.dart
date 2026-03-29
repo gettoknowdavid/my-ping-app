@@ -1,5 +1,6 @@
 export 'package:command_it/command_it.dart';
 export 'package:equatable/equatable.dart';
+export 'package:flutter/foundation.dart';
 export 'package:freezed_annotation/freezed_annotation.dart';
 export 'package:get_it/get_it.dart';
 export 'package:go_router/go_router.dart';

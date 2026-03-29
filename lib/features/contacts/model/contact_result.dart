@@ -1,6 +1,7 @@
 import 'package:ping/_ping.dart';
 
 part 'contact_result.freezed.dart';
+part 'contact_result.g.dart';
 
 @Freezed(toJson: false)
 abstract class ContactResult with _$ContactResult {
@@ -11,6 +12,9 @@ abstract class ContactResult with _$ContactResult {
     @JsonKey(name: 'avatar_url') String? avatarUrl,
     String? about,
   }) = _ContactResult;
+
+  factory ContactResult.fromJson(Map<String, Object?> json) =>
+      _$ContactResultFromJson(json);
 
   const ContactResult._();
 

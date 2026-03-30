@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:flutter/foundation.dart';
 import 'package:ping/_injector/_user_scope.dart';
 import 'package:ping/_ping.dart';
 import 'package:ping/_shared/_shared.dart';
@@ -35,7 +34,7 @@ class AuthManager extends ChangeNotifier implements Disposable {
       }
 
       if (incoming is Authenticated && current is! Authenticated) {
-        UserScope.pushScope(incoming.profile);
+        await UserScope.pushScope(incoming.profile);
       }
 
       _status.value = incoming;
@@ -55,7 +54,7 @@ class AuthManager extends ChangeNotifier implements Disposable {
         final session = await _service.verifyOtp(params);
         final profile = await _service.fetchProfile(session.user.id);
         if (profile?.displayName != null) {
-          UserScope.pushScope(profile!);
+          await UserScope.pushScope(profile!);
           _status.value = .authenticated(profile);
         } else {
           _status.value = .onboarding(session.user.id);
@@ -66,7 +65,7 @@ class AuthManager extends ChangeNotifier implements Disposable {
     completeOnboarding = .createAsyncNoResult<NewProfileArgs>(
       (params) async {
         final profile = await _service.createProfile(params);
-        UserScope.pushScope(profile);
+        await UserScope.pushScope(profile);
         _status.value = .authenticated(profile);
       },
       errorFilter: const GlobalIfNoLocalErrorFilter(),
@@ -99,7 +98,7 @@ class AuthManager extends ChangeNotifier implements Disposable {
     if (session != null) {
       final profile = await _service.fetchProfile(session.user.id);
       if (profile?.displayName != null) {
-        UserScope.pushScope(profile!);
+        await UserScope.pushScope(profile!);
         _status.value = .authenticated(profile);
       } else {
         _status.value = .onboarding(session.user.id);

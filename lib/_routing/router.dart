@@ -4,7 +4,6 @@ import 'package:ping/_shell/app_shell.dart';
 import 'package:ping/features/auth/manager/auth_manager.dart';
 import 'package:ping/features/auth/model/auth_status.dart';
 import 'package:ping/features/auth/pages/_pages.dart';
-import 'package:ping/features/auth/pages/home_page.dart';
 import 'package:ping/features/calls/pages/calls_page.dart';
 import 'package:ping/features/chats/pages/chats_page.dart';
 import 'package:ping/features/communities/pages/communities_page.dart';
@@ -34,6 +33,7 @@ class PingRouter {
 
   static GoRouter _buildConfig(AuthManager auth) {
     return GoRouter(
+      initialLocation: const ChatsRoute().location,
       routes: $appRoutes,
       refreshListenable: auth.status,
       redirect: (context, state) {
@@ -77,16 +77,6 @@ class AccountOnboardingRoute extends GoRouteData with $AccountOnboardingRoute {
   @override
   Widget build(BuildContext context, GoRouterState state) {
     return const AccountOnboardingPage();
-  }
-}
-
-@TypedGoRoute<HomeRoute>(path: '/')
-class HomeRoute extends GoRouteData with $HomeRoute {
-  const HomeRoute();
-
-  @override
-  Widget build(BuildContext context, GoRouterState state) {
-    return const HomePage();
   }
 }
 

@@ -15,7 +15,7 @@ class ContactSearchBar extends WatchingWidget {
     return ShadInput(
       placeholder: const Text('Enter phone number'),
       leading: const Icon(LucideIcons.search),
-      trailing: isSearching ? const LoadingIndicator(dimension: 16) : null,
+      trailing: isSearching ? const LoadingIndicator(size: 16) : null,
       onChanged: (value) => di<ContactsManager>().phoneInput.value = value,
       keyboardType: .phone,
     );

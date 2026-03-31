@@ -1,7 +1,5 @@
 import 'dart:developer';
-import 'dart:io';
 
-import 'package:flutter/foundation.dart';
 import 'package:ping/_ping.dart';
 import 'package:ping/_shared/_shared.dart';
 import 'package:ping/features/auth/model/_model.dart';
@@ -33,7 +31,7 @@ class AuthService {
 
       String? avatarUrl;
       if (args.avatar != null) {
-        avatarUrl = await uploadAvatar(userId: userId, file: args.avatar!);
+        avatarUrl = await _db.uploadAvatar(userId, avatar: args.avatar!);
       }
 
       final data = Profile.update(
@@ -43,21 +41,15 @@ class AuthService {
         avatarUrl: avatarUrl,
       );
 
-      final response = await _db.client
-          .from('profiles')
-          .update(data)
-          .eq('id', userId)
-          .select()
-          .single();
-      return Profile.fromJson(response);
-    } on AuthApiException catch (error, stackTrace) {
-      log('AuthService', error: error, stackTrace: stackTrace);
-      throw PingException.auth(error);
-    } on AuthException catch (error, stackTrace) {
-      log('AuthService', error: error, stackTrace: stackTrace);
-      throw PingException.auth(error);
+      return _db.updateProfile(userId, data: data);
+    } on PostgrestException catch (error, stackTrace) {
+      log('AuthService.uploadAvatar', error: error, stackTrace: stackTrace);
+      throw PingException(error.message);
+    } on StorageException catch (error, stackTrace) {
+      log('AuthService.uploadAvatar', error: error, stackTrace: stackTrace);
+      throw PingException(error.message);
     } on Exception catch (error, stackTrace) {
-      log('AuthService', error: error, stackTrace: stackTrace);
+      log('AuthService.uploadAvatar', error: error, stackTrace: stackTrace);
       throw PingException.auth(error);
     }
   }
@@ -93,38 +85,6 @@ class AuthService {
     } on AuthApiException catch (error) {
       throw PingException.auth(error);
     } on AuthException catch (error) {
-      throw PingException.auth(error);
-    }
-  }
-
-  // Uploads avatar to Supabase Storage — returns the public URL
-  Future<String> uploadAvatar({
-    required String userId,
-    required File file,
-  }) async {
-    try {
-      final ext = file.path.split('.').last;
-      final path = '$userId/avatar.$ext';
-      const fileOptions = FileOptions(upsert: true);
-
-      if (kIsWeb) {
-        final bytes = await file.readAsBytes();
-        await _db.client.storage
-            .from('avatars')
-            .uploadBinary(path, bytes, fileOptions: fileOptions);
-      } else {
-        await _db.client.storage
-            .from('avatars')
-            .upload(path, file, fileOptions: fileOptions);
-      }
-
-      // Use path, not the upload() return value
-      return _db.client.storage.from('avatars').getPublicUrl(path);
-    } on StorageException catch (error, stackTrace) {
-      log('AuthService.uploadAvatar', error: error, stackTrace: stackTrace);
-      throw PingException(error.message);
-    } on Exception catch (error, stackTrace) {
-      log('AuthService.uploadAvatar', error: error, stackTrace: stackTrace);
       throw PingException.auth(error);
     }
   }

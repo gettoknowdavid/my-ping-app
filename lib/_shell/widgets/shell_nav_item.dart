@@ -15,13 +15,13 @@ class ShellNavItem {
   // The four tabs — defined once, used by both shells
   static const List<ShellNavItem> items = [
     ShellNavItem._(
-      icon: LucideIcons.messageCircle,
-      selectedIcon: LucideIcons.messageCircle,
+      icon: LucideIcons.messageCircleMore,
+      selectedIcon: LucideIcons.messageCircleMore,
       label: 'Chats',
     ),
     ShellNavItem._(
-      icon: LucideIcons.clock,
-      selectedIcon: LucideIcons.clock,
+      icon: LucideIcons.circleFadingPlus,
+      selectedIcon: LucideIcons.circleFadingPlus,
       label: 'Updates',
     ),
     ShellNavItem._(

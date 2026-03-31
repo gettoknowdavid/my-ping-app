@@ -124,3 +124,8 @@ app.*.symbols
 **.g.dart
 **.env
 /supadart.yaml
+/.geminiignore
+/GEMINI.md
+/context/WhatsApp-Clone-1.md
+/context/WhatsApp-Clone-2.md
+/context/WhatsApp-Clone-3.md

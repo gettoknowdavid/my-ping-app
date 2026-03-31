@@ -75,8 +75,7 @@ class AuthService {
   // Fetches profile for a given userId — returns null if onboarding incomplete
   Future<Profile?> fetchProfile(String userId) async {
     try {
-      final response = await _db.client
-          .from('profiles')
+      final response = await _db.profiles
           .select()
           .eq(Profile.cId, userId)
           .maybeSingle();
@@ -86,6 +85,14 @@ class AuthService {
       throw PingException.auth(error);
     } on AuthException catch (error) {
       throw PingException.auth(error);
+    }
+  }
+
+  Future<void> deleteAccount() async {
+    try {
+      await _db.client.rpc<dynamic>('delete_account');
+    } on Exception catch (error) {
+      throw PingException(error.message);
     }
   }
 

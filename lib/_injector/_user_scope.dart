@@ -3,6 +3,7 @@ import 'package:ping/_shared/_shared.dart';
 import 'package:ping/features/auth/model/profile.dart';
 import 'package:ping/features/contacts/manager/_manager.dart';
 import 'package:ping/features/contacts/services/_services.dart';
+import 'package:ping/features/profile/manager/_manager.dart';
 import 'package:ping/features/profile/services/_services.dart';
 
 abstract class UserScope {
@@ -21,12 +22,12 @@ abstract class UserScope {
         scope.registerLazySingleton<ContactsManager>(() {
           return ContactsManager(di<ContactsService>());
         });
-        scope.registerLazySingleton<ProfileService>(() {
-          return ProfileService(
-            db: di<DatabaseService>(),
-            userId: profile.id,
-          );
-        });
+        scope.registerSingletonWithDependencies<ProfileService>(() {
+          return ProfileService(db: di<DatabaseService>(), userId: profile.id);
+        }, dependsOn: [DatabaseService]);
+        scope.registerSingletonAsync<ProfileManager>(() async {
+          return ProfileManager(profile: profile, toast: di<ToastManager>());
+        }, onCreated: (manager) => manager.initialize());
       },
     );
   }

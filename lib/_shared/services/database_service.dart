@@ -37,7 +37,7 @@ class DatabaseService {
     required Map<String, Object?> data,
   }) => profiles
       .update(data)
-      .eq('id', id)
+      .eq(Profile.cId, id)
       .select()
       .single()
       .withConverter(Profile.fromJson);

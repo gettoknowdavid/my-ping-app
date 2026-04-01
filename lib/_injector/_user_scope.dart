@@ -3,7 +3,7 @@ import 'package:ping/_shared/_shared.dart';
 import 'package:ping/features/auth/model/profile.dart';
 import 'package:ping/features/contacts/manager/_manager.dart';
 import 'package:ping/features/contacts/services/_services.dart';
-import 'package:ping/features/settings/services/_services.dart';
+import 'package:ping/features/profile/services/_services.dart';
 
 abstract class UserScope {
   static const String name = 'user';

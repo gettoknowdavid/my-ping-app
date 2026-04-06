@@ -74,7 +74,7 @@ class ProfileProxy extends ChangeNotifier implements Disposable {
 
   String get about => _aboutOverride ?? _target.about ?? '';
 
-  String get avatarUrl => _avatarUrlOverride ?? _target.avatarUrl ?? '';
+  String? get avatarUrl => _avatarUrlOverride ?? _target.avatarUrl;
 
   bool get hasChanges =>
       _displayNameOverride != null ||

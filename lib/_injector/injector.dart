@@ -1,7 +1,6 @@
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:ping/_ping.dart';
-import 'package:ping/_routing/_routing.dart';
 import 'package:ping/_shared/_shared.dart';
 import 'package:ping/features/auth/manager/auth_manager.dart';
 import 'package:ping/features/auth/services/auth_service.dart';

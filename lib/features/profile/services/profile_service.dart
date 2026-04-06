@@ -29,11 +29,12 @@ class ProfileService {
 
   Future<Profile> updateProfile({String? displayName, String? about}) async {
     try {
-      const data = <String, dynamic>{};
-      if (data.isEmpty) throw const PingException('No fields selected');
+      final data = <String, dynamic>{};
 
       if (displayName != null) data[Profile.cDisplayName] = displayName;
       if (about != null) data[Profile.cAbout] = about;
+
+      if (data.isEmpty) throw const PingException('No fields selected');
 
       return _db.updateProfile(_id, data: data);
     } on PostgrestException catch (error) {

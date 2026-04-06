@@ -19,6 +19,8 @@ class PhoneInputFormField extends StatefulWidget {
     this.onSubmitted,
     this.focusNode,
     this.enabled = true,
+    this.labelStyle,
+    this.initialValue,
   });
 
   final String? id;
@@ -31,6 +33,8 @@ class PhoneInputFormField extends StatefulWidget {
   final void Function(String)? onSubmitted;
   final FocusNode? focusNode;
   final bool enabled;
+  final TextStyle? labelStyle;
+  final MobileNumber? initialValue;
 
   @override
   State<PhoneInputFormField> createState() => _PhoneInputFormFieldState();
@@ -55,6 +59,12 @@ class _PhoneInputFormFieldState extends State<PhoneInputFormField> {
     _selectedCountry = countries.firstWhere(
       (e) => e.code == widget.initialCountryCode,
     );
+
+    if (widget.initialValue != null && widget.onChanged != null) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        widget.onChanged?.call(widget.initialValue!);
+      });
+    }
   }
 
   void _onChanged(String value) {
@@ -84,8 +94,11 @@ class _PhoneInputFormFieldState extends State<PhoneInputFormField> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = ShadTheme.of(context);
+    final effectiveLabelStyle = widget.labelStyle ?? theme.textTheme.muted;
     return ShadInputFormField(
       id: widget.id,
+      initialValue: widget.initialValue?.number,
       leading: FlagsDropDown(
         flagWidth: 18,
         countryCodeDisable: true,
@@ -98,7 +111,9 @@ class _PhoneInputFormFieldState extends State<PhoneInputFormField> {
       enabled: widget.enabled,
       focusNode: widget.focusNode,
       keyboardType: TextInputType.number,
-      label: widget.label,
+      label: widget.label != null
+          ? DefaultTextStyle(style: effectiveLabelStyle, child: widget.label!)
+          : null,
       placeholder: widget.placeholder,
       onChanged: _onChanged,
       validator: _validateSync,

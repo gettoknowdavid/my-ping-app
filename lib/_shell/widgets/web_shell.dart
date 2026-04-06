@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:ping/_ping.dart';
 import 'package:ping/_shell/widgets/_widgets.dart';
+import 'package:ping/features/profile/widgets/profile_avatar.dart';
 
 class WebShell extends StatelessWidget {
   const WebShell({required this.navigationShell, super.key});
@@ -57,17 +58,6 @@ class _NavigationRail extends StatelessWidget {
           ),
         ),
       ),
-    );
-  }
-}
-
-class ProfileAvatar extends WatchingWidget {
-  const ProfileAvatar({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      child: const ShadAvatar(null, placeholder: Text('DA')),
     );
   }
 }

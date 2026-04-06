@@ -8,6 +8,8 @@ import 'package:ping/features/calls/pages/calls_page.dart';
 import 'package:ping/features/chats/pages/chats_page.dart';
 import 'package:ping/features/communities/pages/communities_page.dart';
 import 'package:ping/features/contacts/contacts.dart';
+import 'package:ping/features/profile/pages/_pages.dart';
+import 'package:ping/features/settings/pages/settings_page.dart';
 import 'package:ping/features/updates/pages/updates_page.dart';
 
 part 'router.g.dart';
@@ -87,6 +89,85 @@ class ContactSearchRoute extends GoRouteData with $ContactSearchRoute {
   @override
   Widget build(BuildContext context, GoRouterState state) {
     return const ContactSearchPage();
+  }
+}
+
+@TypedGoRoute<SettingsRoute>(path: '/settings')
+class SettingsRoute extends GoRouteData with $SettingsRoute {
+  const SettingsRoute();
+
+  @override
+  Widget build(BuildContext context, GoRouterState state) {
+    return const SettingsPage();
+  }
+}
+
+@TypedGoRoute<ProfileRoute>(
+  path: '/profile',
+  routes: [
+    TypedGoRoute<ProfileNameRoute>(path: 'name'),
+    TypedGoRoute<ProfileAboutRoute>(path: 'about'),
+    TypedGoRoute<ProfilePhoneRoute>(
+      path: 'phone',
+      routes: [
+        TypedGoRoute<PhoneChangeStep1Route>(path: 'step/1'),
+        TypedGoRoute<PhoneChangeStep2Route>(path: 'step/2'),
+      ],
+    ),
+  ],
+)
+class ProfileRoute extends GoRouteData with $ProfileRoute {
+  const ProfileRoute();
+
+  @override
+  Widget build(BuildContext context, GoRouterState state) {
+    return const ProfilePage();
+  }
+}
+
+class ProfileNameRoute extends GoRouteData with $ProfileNameRoute {
+  const ProfileNameRoute();
+
+  @override
+  Widget build(BuildContext context, GoRouterState state) {
+    return const ProfileNamePage();
+  }
+}
+
+class ProfileAboutRoute extends GoRouteData with $ProfileAboutRoute {
+  const ProfileAboutRoute();
+
+  @override
+  Widget build(BuildContext context, GoRouterState state) {
+    return const ProfileAboutPage();
+  }
+}
+
+class ProfilePhoneRoute extends GoRouteData with $ProfilePhoneRoute {
+  const ProfilePhoneRoute();
+
+  @override
+  Widget build(BuildContext context, GoRouterState state) {
+    return const ProfilePhonePage();
+  }
+}
+
+class PhoneChangeStep1Route extends GoRouteData with $PhoneChangeStep1Route {
+  const PhoneChangeStep1Route();
+
+  @override
+  Widget build(BuildContext context, GoRouterState state) {
+    return const PhoneChangeStep1Page();
+  }
+}
+
+class PhoneChangeStep2Route extends GoRouteData with $PhoneChangeStep2Route {
+  const PhoneChangeStep2Route(this.$newPhoneNumber);
+  final String $newPhoneNumber;
+
+  @override
+  Widget build(BuildContext context, GoRouterState state) {
+    return PhoneChangeStep2Page($newPhoneNumber);
   }
 }
 

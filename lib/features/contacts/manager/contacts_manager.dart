@@ -6,15 +6,14 @@ import 'package:ping/features/contacts/services/_services.dart';
 
 class ContactsManager implements Disposable {
   ContactsManager(this._service) {
+    _debouncedInput = phoneInput.debounce(const Duration(milliseconds: 500));
+
     searchCommand = .createAsyncNoResult<String>((args) async {
       hasSearched.value = true;
       result.value = await _service.findByPhone(args);
     }, errorFilter: const GlobalIfNoLocalErrorFilter());
 
-    searchCommand.errors.listen((error, _) {
-      // Errors surface via command.errors —
-      // ContactSearchPage registers a handler for these
-    });
+    searchCommand.errors.listen((error, _) {});
 
     _inputSubscription = _debouncedInput.listen((input, _) {
       if (input.trim().length >= 7) {
@@ -32,13 +31,10 @@ class ContactsManager implements Disposable {
   final result = ValueNotifier<ContactResult?>(null);
   final hasSearched = ValueNotifier<bool>(false);
 
-  late final ValueListenable<String> _debouncedInput = phoneInput.debounce(
-    const Duration(milliseconds: 500),
-  );
+  late final ValueListenable<String> _debouncedInput;
+  late final Command<String, void> searchCommand;
 
   ListenableSubscription? _inputSubscription;
-
-  late final Command<String, void> searchCommand;
 
   void clear() {
     phoneInput.value = '';

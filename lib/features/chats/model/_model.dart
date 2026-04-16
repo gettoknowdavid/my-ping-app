@@ -1,5 +1,6 @@
 //GENERATED BARREL FILE
 export 'conversation.dart';
+export 'conversation_list_item_model.dart';
 export 'conversation_member.dart';
 export 'conversation_type.dart';
 export 'message.dart';

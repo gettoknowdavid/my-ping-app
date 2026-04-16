@@ -1,6 +1,7 @@
 import 'package:ping/_ping.dart';
 import 'package:ping/_shared/_shared.dart';
 import 'package:ping/features/auth/model/profile.dart';
+import 'package:ping/features/chats/manager/_manager.dart';
 import 'package:ping/features/chats/services/_services.dart';
 import 'package:ping/features/contacts/manager/_manager.dart';
 import 'package:ping/features/contacts/services/_services.dart';
@@ -34,6 +35,14 @@ abstract class UserScope {
         });
         scope.registerSingletonAsync<MessageService>(() async {
           return MessageService(di<DatabaseService>());
+        });
+        scope.registerSingletonAsync<ConversationsManager>(() async {
+          final manager = ConversationsManager(
+            service: di<ConversationService>(),
+            db: di<DatabaseService>(),
+          );
+          await manager.initialize();
+          return manager;
         });
       },
     );

@@ -25,4 +25,8 @@ abstract class ConversationListItemModel with _$ConversationListItemModel {
 
   factory ConversationListItemModel.fromJson(Map<String, Object?> json) =>
       _$ConversationListItemModelFromJson(json);
+
+  const ConversationListItemModel._();
+
+  bool get isGroup => type == .group;
 }

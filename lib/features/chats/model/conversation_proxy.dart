@@ -18,6 +18,11 @@ class ConversationProxy extends ChangeNotifier {
     notifyListeners();
   }
 
+  // The conversation ID
+  String get id => _target.id;
+
+  DateTime? get lastMessageAt => _target.lastMessageAt;
+
   // The name shown in the conversation list row
   String get displayName => switch (_target.type) {
     .group => _target.groupName ?? 'Group',

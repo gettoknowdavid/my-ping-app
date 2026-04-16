@@ -51,7 +51,6 @@ class ConversationsManager implements Disposable {
         );
       }
       conversations.endTransAction();
-      debugPrint('ConversationsManager: _fetchConversations');
     } catch (e) {
       throw PingException(e.toString());
     } finally {

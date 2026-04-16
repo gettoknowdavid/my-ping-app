@@ -15,4 +15,10 @@ abstract class MessageReceipt with _$MessageReceipt {
 
   factory MessageReceipt.fromJson(Map<String, Object?> json) =>
       _$MessageReceiptFromJson(json);
+
+  static const String tableName = 'message_receipts';
+  static const String cMessageId = 'message_id';
+  static const String cProfileId = 'profile_id';
+  static const String cDeliveredAt = 'delivered_at';
+  static const String cReadAt = 'read_at';
 }

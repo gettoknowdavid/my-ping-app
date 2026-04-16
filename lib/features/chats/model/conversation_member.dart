@@ -16,4 +16,27 @@ abstract class ConversationMember with _$ConversationMember {
 
   factory ConversationMember.fromJson(Map<String, Object?> json) =>
       _$ConversationMemberFromJson(json);
+
+  factory ConversationMember.admin({
+    required String conversationId,
+    required String profileId,
+  }) => ConversationMember(
+    conversationId: conversationId,
+    profileId: profileId,
+    isAdmin: true,
+    joinedAt: DateTime.now(),
+  );
+
+  factory ConversationMember.member({
+    required String conversationId,
+    required String profileId,
+  }) => ConversationMember(
+    conversationId: conversationId,
+    profileId: profileId,
+    isAdmin: false,
+    joinedAt: DateTime.now(),
+  );
+
+  static const String tableName = 'conversation_members';
+  static const String cLastReadAt = 'last_read_at';
 }

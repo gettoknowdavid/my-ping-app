@@ -24,6 +24,9 @@ abstract class Conversation with _$Conversation {
 
   static const String tableName = 'conversations';
   static const String cId = 'id';
-  static const String cIsGroup = 'is_group';
+  static const String cGroupName = 'group_name';
+  static const String cType = 'conversation_type';
+  static const String cCreatorId = 'creator_id';
+  static const String cAvatarUrl = 'avatar_url';
   static const String cLastMessageAt = 'last_message_at';
 }

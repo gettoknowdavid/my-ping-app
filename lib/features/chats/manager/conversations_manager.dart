@@ -27,8 +27,8 @@ class ConversationsManager implements Disposable {
       errorFilter: const GlobalIfNoLocalErrorFilter(),
     );
 
-    await _fetchConversations();
     _subscribeToUpdates();
+    await _fetchConversations();
   }
 
   Future<void> _fetchConversations() async {
@@ -51,10 +51,12 @@ class ConversationsManager implements Disposable {
         );
       }
       conversations.endTransAction();
+      debugPrint('ConversationsManager: _fetchConversations');
     } catch (e) {
       throw PingException(e.toString());
     } finally {
       isLoading.value = false;
+      GetIt.instance.signalReady(this);
     }
   }
 

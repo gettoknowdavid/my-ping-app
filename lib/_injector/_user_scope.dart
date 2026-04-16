@@ -36,14 +36,15 @@ abstract class UserScope {
         scope.registerSingletonAsync<MessageService>(() async {
           return MessageService(di<DatabaseService>());
         });
-        scope.registerSingletonAsync<ConversationsManager>(() async {
-          final manager = ConversationsManager(
+        scope.registerSingletonAsync<ConversationsManager>(
+          () async => ConversationsManager(
             service: di<ConversationService>(),
             db: di<DatabaseService>(),
-          );
-          await manager.initialize();
-          return manager;
-        });
+          ),
+          onCreated: (manager) async => manager.initialize(),
+          dependsOn: [ConversationService, DatabaseService],
+          signalsReady: true,
+        );
       },
     );
   }

@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:ping/_core/env.dart';
 import 'package:ping/_ping.dart';
 import 'package:ping/features/auth/model/_model.dart';
+import 'package:ping/features/chats/model/_model.dart';
 
 class DatabaseService {
   DatabaseService._();
@@ -31,6 +32,19 @@ class DatabaseService {
   SupabaseQueryBuilder get profiles => _client.from('profiles');
 
   StorageFileApi get avatars => _client.storage.from('avatars');
+
+  SupabaseQueryBuilder get conversations =>
+      _client.from(Conversation.tableName);
+
+  SupabaseQueryBuilder get conversationMembers =>
+      _client.from(ConversationMember.tableName);
+
+  SupabaseQueryBuilder get messages => _client.from(Message.tableName);
+
+  SupabaseQueryBuilder get messageReceipts =>
+      _client.from(MessageReceipt.tableName);
+
+  StorageFileApi get chatMedia => _client.storage.from('chat-media');
 
   PostgrestBuilder<Profile, Profile, PostgrestMap> updateProfile(
     String id, {

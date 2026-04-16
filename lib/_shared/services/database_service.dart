@@ -44,6 +44,9 @@ class DatabaseService {
   SupabaseQueryBuilder get messageReceipts =>
       _client.from(MessageReceipt.tableName);
 
+  SupabaseQueryBuilder get conversationsView =>
+      _client.from('conversations_list_view');
+
   StorageFileApi get chatMedia => _client.storage.from('chat-media');
 
   PostgrestBuilder<Profile, Profile, PostgrestMap> updateProfile(

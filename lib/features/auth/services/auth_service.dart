@@ -9,6 +9,8 @@ class AuthService {
 
   final DatabaseService _db;
 
+  String? get activeUserId => _db.client.auth.currentUser?.id;
+
   Session? get currentSession => _db.client.auth.currentSession;
 
   // Sends OTP to phone number

@@ -1,5 +1,6 @@
 import 'package:ping/_ping.dart';
 import 'package:ping/_shared/_shared.dart';
+import 'package:ping/features/auth/model/profile.dart';
 import 'package:ping/features/chats/model/_model.dart';
 
 class ConversationService {
@@ -160,5 +161,66 @@ class ConversationService {
           },
         )
         .subscribe();
+  }
+
+  /// Fetch all items from the `conversations_list` view
+  Future<List<ConversationListItemModel>> fetchConversationListItems() async {
+    try {
+      final response = await _db.conversationsView.select().order(
+        'last_message_at',
+        ascending: false,
+        nullsFirst: false,
+      );
+
+      return (response as List<dynamic>).map((e) {
+        final json = e as Map<String, Object?>;
+        return ConversationListItemModel.fromJson(json);
+      }).toList();
+    } on PostgrestException catch (e) {
+      throw PingException(e.message);
+    } on Exception catch (e) {
+      throw PingException(e.toString());
+    }
+  }
+
+  /// Fetch a single item from the view (for refresh after Realtime update)
+  Future<ConversationListItemModel?> fetchConversationListItem(
+    String conversationId,
+  ) async {
+    try {
+      final response = await _db.conversationsView
+          .select()
+          .eq('id', conversationId)
+          .maybeSingle();
+      if (response == null) return null;
+      return ConversationListItemModel.fromJson(response);
+    } on PostgrestException catch (e) {
+      throw PingException(e.message);
+    } on Exception catch (e) {
+      throw PingException(e.toString());
+    }
+  }
+
+  /// Fetch the other member's profile for a one-on-one conversation
+  Future<Profile?> fetchOtherMemberProfile(
+    String conversationId,
+    String currentUserId,
+  ) async {
+    try {
+      final response = await _db.client
+          .from(ConversationMember.tableName)
+          .select('profile_id, profiles(*)')
+          .eq('conversation_id', conversationId)
+          .neq('profile_id', currentUserId)
+          .maybeSingle();
+      if (response == null) return null;
+      final profileData = response['profiles'] as Map<String, dynamic>?;
+      if (profileData == null) return null;
+      return Profile.fromJson(profileData);
+    } on PostgrestException catch (e) {
+      throw PingException(e.message);
+    } on Exception catch (e) {
+      throw PingException(e.toString());
+    }
   }
 }

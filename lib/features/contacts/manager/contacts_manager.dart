@@ -1,17 +1,28 @@
 import 'dart:async';
 
 import 'package:ping/_ping.dart';
+import 'package:ping/features/chats/services/conversation_service.dart';
 import 'package:ping/features/contacts/model/_model.dart';
 import 'package:ping/features/contacts/services/_services.dart';
 
 class ContactsManager implements Disposable {
-  ContactsManager(this._service) {
+  ContactsManager({
+    required ContactsService service,
+    required ConversationService conversationService,
+  }) : _service = service,
+       _conversationService = conversationService {
     _debouncedInput = phoneInput.debounce(const Duration(milliseconds: 500));
 
     searchCommand = .createAsyncNoResult<String>((args) async {
       hasSearched.value = true;
       result.value = await _service.findByPhone(args);
     }, errorFilter: const GlobalIfNoLocalErrorFilter());
+
+    startConversationCommand = .createAsync<String, String>(
+      _conversationService.getOrCreateConversation,
+      initialValue: '',
+      errorFilter: const GlobalIfNoLocalErrorFilter(),
+    );
 
     searchCommand.errors.listen((error, _) {});
 
@@ -26,6 +37,7 @@ class ContactsManager implements Disposable {
   }
 
   final ContactsService _service;
+  final ConversationService _conversationService;
 
   final phoneInput = ValueNotifier<String>('');
   final result = ValueNotifier<ContactResult?>(null);
@@ -33,6 +45,7 @@ class ContactsManager implements Disposable {
 
   late final ValueListenable<String> _debouncedInput;
   late final Command<String, void> searchCommand;
+  late final Command<String, String> startConversationCommand;
 
   ListenableSubscription? _inputSubscription;
 
@@ -53,5 +66,6 @@ class ContactsManager implements Disposable {
     hasSearched.dispose();
 
     searchCommand.dispose();
+    startConversationCommand.dispose();
   }
 }

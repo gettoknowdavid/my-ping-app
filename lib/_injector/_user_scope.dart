@@ -1,6 +1,8 @@
 import 'package:ping/_ping.dart';
 import 'package:ping/_shared/_shared.dart';
 import 'package:ping/features/auth/model/profile.dart';
+import 'package:ping/features/chats/manager/_manager.dart';
+import 'package:ping/features/chats/services/_services.dart';
 import 'package:ping/features/contacts/manager/_manager.dart';
 import 'package:ping/features/contacts/services/_services.dart';
 import 'package:ping/features/profile/manager/_manager.dart';
@@ -19,15 +21,34 @@ abstract class UserScope {
         scope.registerLazySingleton<ContactsService>(() {
           return ContactsService(di<DatabaseService>());
         });
-        scope.registerLazySingleton<ContactsManager>(() {
-          return ContactsManager(di<ContactsService>());
-        });
         scope.registerSingletonWithDependencies<ProfileService>(() {
           return ProfileService(db: di<DatabaseService>(), userId: profile.id);
         }, dependsOn: [DatabaseService]);
+        scope.registerSingletonAsync<ConversationService>(() async {
+          return ConversationService(di<DatabaseService>());
+        });
+        scope.registerSingletonAsync<MessageService>(() async {
+          return MessageService(di<DatabaseService>());
+        });
+
         scope.registerSingletonAsync<ProfileManager>(() async {
           return ProfileManager(profile: profile, toast: di<ToastManager>());
         }, onCreated: (manager) => manager.initialize());
+        scope.registerLazySingleton<ContactsManager>(() {
+          return ContactsManager(
+            service: di<ContactsService>(),
+            conversationService: di<ConversationService>(),
+          );
+        });
+        scope.registerSingletonAsync<ConversationsManager>(
+          () async => ConversationsManager(
+            service: di<ConversationService>(),
+            db: di<DatabaseService>(),
+          ),
+          onCreated: (manager) async => manager.initialize(),
+          dependsOn: [ConversationService, DatabaseService],
+          signalsReady: true,
+        );
       },
     );
   }

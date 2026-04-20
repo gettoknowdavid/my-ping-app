@@ -5,7 +5,7 @@ import 'package:ping/features/auth/manager/auth_manager.dart';
 import 'package:ping/features/auth/model/auth_status.dart';
 import 'package:ping/features/auth/pages/_pages.dart';
 import 'package:ping/features/calls/pages/calls_page.dart';
-import 'package:ping/features/chats/pages/chats_page.dart';
+import 'package:ping/features/chats/pages/_pages.dart';
 import 'package:ping/features/communities/pages/communities_page.dart';
 import 'package:ping/features/contacts/contacts.dart';
 import 'package:ping/features/profile/pages/_pages.dart';
@@ -163,6 +163,7 @@ class PhoneChangeStep1Route extends GoRouteData with $PhoneChangeStep1Route {
 
 class PhoneChangeStep2Route extends GoRouteData with $PhoneChangeStep2Route {
   const PhoneChangeStep2Route(this.$newPhoneNumber);
+
   final String $newPhoneNumber;
 
   @override
@@ -171,11 +172,27 @@ class PhoneChangeStep2Route extends GoRouteData with $PhoneChangeStep2Route {
   }
 }
 
+class ChatThreadRoute extends GoRouteData with $ChatThreadRoute {
+  const ChatThreadRoute(this.conversationId);
+
+  final String conversationId;
+
+  @override
+  Widget build(BuildContext context, GoRouterState state) {
+    return ChatThreadPage(conversationId: conversationId);
+  }
+}
+
 @TypedStatefulShellRoute<AppShellRouteData>(
   branches: <TypedStatefulShellBranch<StatefulShellBranchData>>[
     TypedStatefulShellBranch<ChatsBranch>(
       routes: <TypedRoute<RouteData>>[
-        TypedGoRoute<ChatsRoute>(path: '/chats'),
+        TypedGoRoute<ChatsRoute>(
+          path: '/chats',
+          routes: <TypedRoute<RouteData>>[
+            TypedGoRoute<ChatThreadRoute>(path: ':conversationId'),
+          ],
+        ),
       ],
     ),
     TypedStatefulShellBranch<UpdatesBranch>(

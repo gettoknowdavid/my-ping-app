@@ -9,8 +9,8 @@ class MessageService {
 
   /// Fetch paginated messages for a conversation newest first, cursor-based
   /// pagination
-  Future<List<Message>> fetchMessages({
-    required String conversationId,
+  Future<List<Message>> fetchMessages(
+    String conversationId, {
     int limit = 30,
     String? beforeId, // cursor — fetch messages older than this id
   }) async {

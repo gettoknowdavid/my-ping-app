@@ -21,20 +21,24 @@ abstract class UserScope {
         scope.registerLazySingleton<ContactsService>(() {
           return ContactsService(di<DatabaseService>());
         });
-        scope.registerLazySingleton<ContactsManager>(() {
-          return ContactsManager(di<ContactsService>());
-        });
         scope.registerSingletonWithDependencies<ProfileService>(() {
           return ProfileService(db: di<DatabaseService>(), userId: profile.id);
         }, dependsOn: [DatabaseService]);
-        scope.registerSingletonAsync<ProfileManager>(() async {
-          return ProfileManager(profile: profile, toast: di<ToastManager>());
-        }, onCreated: (manager) => manager.initialize());
         scope.registerSingletonAsync<ConversationService>(() async {
           return ConversationService(di<DatabaseService>());
         });
         scope.registerSingletonAsync<MessageService>(() async {
           return MessageService(di<DatabaseService>());
+        });
+
+        scope.registerSingletonAsync<ProfileManager>(() async {
+          return ProfileManager(profile: profile, toast: di<ToastManager>());
+        }, onCreated: (manager) => manager.initialize());
+        scope.registerLazySingleton<ContactsManager>(() {
+          return ContactsManager(
+            service: di<ContactsService>(),
+            conversationService: di<ConversationService>(),
+          );
         });
         scope.registerSingletonAsync<ConversationsManager>(
           () async => ConversationsManager(

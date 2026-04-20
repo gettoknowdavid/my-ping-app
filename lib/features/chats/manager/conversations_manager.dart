@@ -40,7 +40,7 @@ class ConversationsManager implements Disposable {
       conversations.startTransAction();
       for (final target in targets) {
         Profile? otherProfile;
-        if (target.isGroup && target.lastMessageSenderId != null) {
+        if (!target.isGroup) {
           otherProfile = await _service.fetchOtherMemberProfile(
             target.id,
             _db.client.auth.currentUser!.id,

@@ -4,9 +4,16 @@ import 'package:ping/_ping.dart';
 import 'package:ping/features/contacts/model/contact_result.dart';
 
 class ContactResultTile extends StatelessWidget {
-  const ContactResultTile({required this.contact, super.key});
+  const ContactResultTile({
+    required this.contact,
+    required this.onTap,
+    this.enabled = true,
+    super.key,
+  });
 
   final ContactResult contact;
+  final void Function() onTap;
+  final bool enabled;
 
   @override
   Widget build(BuildContext context) {
@@ -19,10 +26,7 @@ class ContactResultTile extends StatelessWidget {
       ),
       title: Text(contact.label),
       subtitle: Text(contact.phone),
-      onTap: () {
-        // Will navigate to new conversation when chat exists
-        // For now: show a toast or profile preview
-      },
+      onTap: enabled ? onTap : null,
     );
   }
 }

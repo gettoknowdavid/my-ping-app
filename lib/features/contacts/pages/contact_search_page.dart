@@ -22,6 +22,10 @@ class ContactSearchPage extends WatchingWidget {
       (manager) => manager.searchCommand.isRunning,
     );
 
+    final isStartingConversation = watchValue<ContactsManager, bool>(
+      (manager) => manager.startConversationCommand.isRunning,
+    );
+
     registerHandler<ContactsManager, CommandError<String>?>(
       select: (manager) => manager.searchCommand.errors,
       handler: (context, error, _) {
@@ -34,10 +38,31 @@ class ContactSearchPage extends WatchingWidget {
       },
     );
 
+    registerHandler<ContactsManager, CommandError<String>?>(
+      select: (manager) => manager.startConversationCommand.errors,
+      handler: (context, error, _) {
+        if (error == null) return;
+        if (error.error is PingException) {
+          di<ToastManager>().error(error.error.message);
+        } else {
+          di<ToastManager>().error(error.error.toString());
+        }
+      },
+    );
+
+    registerHandler<ContactsManager, String>(
+      select: (manager) => manager.startConversationCommand,
+      handler: (context, conversationId, _) {
+        if (conversationId.isNotEmpty && context.mounted) {
+          ChatThreadRoute(conversationId).pushReplacement(context);
+        }
+      },
+    );
+
     return Scaffold(
       appBar: AppBar(title: const Text('New Chat')),
       body: Padding(
-        padding: const EdgeInsets.all(16),
+        padding: const .all(16),
         child: Column(
           children: [
             const ContactSearchBar(),
@@ -45,7 +70,13 @@ class ContactSearchPage extends WatchingWidget {
             if (isSearching)
               const Center(child: LoadingIndicator())
             else if (result != null)
-              ContactResultTile(contact: result)
+              ContactResultTile(
+                contact: result,
+                enabled: !isStartingConversation,
+                onTap: () => di<ContactsManager>().startConversationCommand.run(
+                  result.id,
+                ),
+              )
             else if (hasSearched)
               const Center(child: Text('No user found with that number'))
             else

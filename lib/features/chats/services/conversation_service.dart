@@ -119,7 +119,7 @@ class ConversationService {
   }
 
   /// Mark all messages in a conversation as read
-  Future<void> markAsRead(String conversationId) async {
+  Future<void> markAllAsRead(String conversationId) async {
     try {
       final lastReadAt = DateTime.now().toUtc().toIso8601String();
       final profileId = _db.client.auth.currentUser!.id;
@@ -128,8 +128,8 @@ class ConversationService {
       await _db.client
           .from(ConversationMember.tableName)
           .update({ConversationMember.cLastReadAt: lastReadAt})
-          .eq(Conversation.cId, conversationId)
-          .eq(Conversation.cCreatorId, profileId);
+          .eq('conversation_id', conversationId)
+          .eq('profile_id', profileId);
 
       // Update read_at on all unread receipts
       await _db.client

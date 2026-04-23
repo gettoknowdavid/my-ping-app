@@ -82,7 +82,7 @@ class ChatsPageView extends WatchingWidget {
                   final proxy = items[index];
                   return ConversationTile(
                     proxy: proxy,
-                    onTap: () => ChatThreadRoute(proxy.id).pushReplacement(
+                    onTap: () => MessageThreadRoute(proxy.id).pushReplacement(
                       context,
                     ),
                   );

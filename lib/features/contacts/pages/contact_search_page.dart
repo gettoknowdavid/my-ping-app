@@ -54,7 +54,7 @@ class ContactSearchPage extends WatchingWidget {
       select: (manager) => manager.startConversationCommand,
       handler: (context, conversationId, _) {
         if (conversationId.isNotEmpty && context.mounted) {
-          ChatThreadRoute(conversationId).pushReplacement(context);
+          MessageThreadRoute(conversationId).pushReplacement(context);
         }
       },
     );

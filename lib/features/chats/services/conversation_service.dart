@@ -128,8 +128,8 @@ class ConversationService {
       await _db.client
           .from(ConversationMember.tableName)
           .update({ConversationMember.cLastReadAt: lastReadAt})
-          .eq(Conversation.cId, conversationId)
-          .eq(Conversation.cCreatorId, profileId);
+          .eq('conversation_id', conversationId)
+          .eq('profile_id', profileId);
 
       // Update read_at on all unread receipts
       await _db.client

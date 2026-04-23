@@ -172,14 +172,14 @@ class PhoneChangeStep2Route extends GoRouteData with $PhoneChangeStep2Route {
   }
 }
 
-class ChatThreadRoute extends GoRouteData with $ChatThreadRoute {
-  const ChatThreadRoute(this.conversationId);
+class MessageThreadRoute extends GoRouteData with $ChatThreadRoute {
+  const MessageThreadRoute(this.conversationId);
 
   final String conversationId;
 
   @override
   Widget build(BuildContext context, GoRouterState state) {
-    return ChatThreadPage(conversationId: conversationId);
+    return MessageThreadPage(conversationId: conversationId);
   }
 }
 
@@ -190,7 +190,7 @@ class ChatThreadRoute extends GoRouteData with $ChatThreadRoute {
         TypedGoRoute<ChatsRoute>(
           path: '/chats',
           routes: <TypedRoute<RouteData>>[
-            TypedGoRoute<ChatThreadRoute>(path: ':conversationId'),
+            TypedGoRoute<MessageThreadRoute>(path: ':conversationId'),
           ],
         ),
       ],

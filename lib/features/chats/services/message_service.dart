@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:ping/_ping.dart';
 import 'package:ping/_shared/_shared.dart';
 import 'package:ping/features/chats/model/_model.dart';
@@ -46,8 +48,10 @@ class MessageService {
           .map((e) => Message.fromJson(e as Map<String, Object?>))
           .toList();
     } on PostgrestException catch (e) {
+      log('MESSAGE SERVICE: PostgrestException', error: e);
       throw PingException(e.message);
     } on Exception catch (e) {
+      log('MESSAGE SERVICE: Exception', error: e);
       throw PingException(e.toString());
     }
   }
@@ -62,7 +66,7 @@ class MessageService {
       final data = <String, dynamic>{};
       data[Message.cConversationId] = conversationId;
       data[Message.cSenderId] = _db.client.auth.currentUser!.id;
-      data[Conversation.cType] = MessageType.text.name;
+      data[Message.cType] = MessageType.text.name;
       data['content'] = content;
       if (replyToId != null) data[Message.cReplyToId] = replyToId;
 

@@ -29,6 +29,7 @@ abstract class Message with _$Message {
   static const String tableName = 'messages';
   static const String cId = 'id';
   static const String cConversationId = 'conversation_id';
+  static const String cType = 'type';
   static const String cSenderId = 'sender_id';
   static const String cReplyToId = 'reply_to_id';
   static const String cMediaUrl = 'media_url';

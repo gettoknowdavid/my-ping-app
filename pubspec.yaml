@@ -24,6 +24,8 @@ dependencies:
   intl_mobile_field: ^2.1.4
   json_annotation: ^4.11.0
   listen_it: ^5.3.5
+  objectbox: ^5.3.1
+  objectbox_flutter_libs: ^5.3.1
   phone_numbers_parser: ^9.0.21
   shadcn_ui: ^0.52.1
   supabase_flutter: ^2.12.1
@@ -38,6 +40,7 @@ dev_dependencies:
   freezed: ^3.2.5
   go_router_builder: ^4.2.0
   json_serializable: ^6.13.0
+  objectbox_generator: ^5.3.1
   very_good_analysis: ^10.2.0
 
 flutter_gen:

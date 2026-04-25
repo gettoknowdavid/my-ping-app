@@ -1,0 +1,228 @@
+{
+  "_note1": "KEEP THIS FILE! Check it into a version control system (VCS) like git.",
+  "_note2": "ObjectBox manages crucial IDs for your object model. See docs for details.",
+  "_note3": "If you have VCS merge conflicts, you must resolve them according to ObjectBox docs.",
+  "entities": [
+    {
+      "id": "1:5451788523521103303",
+      "lastPropertyId": "18:2604271450899661682",
+      "name": "LocalMessage",
+      "properties": [
+        {
+          "id": "1:8128518052668025228",
+          "name": "boxId",
+          "type": 6,
+          "flags": 1
+        },
+        {
+          "id": "2:7688933445718760245",
+          "name": "remoteId",
+          "indexId": "1:1416620223695289125",
+          "type": 9,
+          "flags": 2080
+        },
+        {
+          "id": "3:7858659041746811677",
+          "name": "conversationId",
+          "type": 9
+        },
+        {
+          "id": "4:5066021789518682382",
+          "name": "senderId",
+          "type": 9
+        },
+        {
+          "id": "5:1130014017455666885",
+          "name": "isDeleted",
+          "type": 1
+        },
+        {
+          "id": "6:3638220972056215490",
+          "name": "createdAt",
+          "type": 10
+        },
+        {
+          "id": "10:5395402805213486698",
+          "name": "dbMessageType",
+          "type": 6
+        },
+        {
+          "id": "11:6377723366144818786",
+          "name": "content",
+          "type": 9
+        },
+        {
+          "id": "12:7594188773480219333",
+          "name": "mediaUrl",
+          "type": 9
+        },
+        {
+          "id": "13:5400233985597597787",
+          "name": "mediaName",
+          "type": 9
+        },
+        {
+          "id": "14:6798049588636749363",
+          "name": "mediaSize",
+          "type": 6
+        },
+        {
+          "id": "15:6651062070652013928",
+          "name": "replyToId",
+          "type": 9
+        },
+        {
+          "id": "16:5392662260601947699",
+          "name": "syncedAt",
+          "type": 10
+        },
+        {
+          "id": "17:9183562816415553687",
+          "name": "isFailed",
+          "type": 1
+        },
+        {
+          "id": "18:2604271450899661682",
+          "name": "isPending",
+          "type": 1
+        }
+      ],
+      "relations": []
+    },
+    {
+      "id": "3:9135828903573834691",
+      "lastPropertyId": "11:555204447503538379",
+      "name": "LocalConversation",
+      "properties": [
+        {
+          "id": "1:7891116563909294232",
+          "name": "boxId",
+          "type": 6,
+          "flags": 1
+        },
+        {
+          "id": "2:7564985594951160247",
+          "name": "remoteId",
+          "indexId": "3:4407636010146004651",
+          "type": 9,
+          "flags": 2080
+        },
+        {
+          "id": "3:9147358249755106226",
+          "name": "groupName",
+          "type": 9
+        },
+        {
+          "id": "4:8546421840496283323",
+          "name": "groupAvatarUrl",
+          "type": 9
+        },
+        {
+          "id": "5:5440886694209972966",
+          "name": "lastMessageContent",
+          "type": 9
+        },
+        {
+          "id": "7:4843989284904428606",
+          "name": "lastMessageSenderId",
+          "type": 9
+        },
+        {
+          "id": "8:7936831167983334583",
+          "name": "lastMessageAt",
+          "type": 10
+        },
+        {
+          "id": "9:2224167049710695250",
+          "name": "syncedAt",
+          "type": 10
+        },
+        {
+          "id": "10:600117251824571990",
+          "name": "dbConversationType",
+          "type": 6
+        },
+        {
+          "id": "11:555204447503538379",
+          "name": "dbLastMessageType",
+          "type": 6
+        }
+      ],
+      "relations": []
+    },
+    {
+      "id": "4:2199208711806608846",
+      "lastPropertyId": "7:928609658491269632",
+      "name": "LocalProfile",
+      "properties": [
+        {
+          "id": "1:4842837478342615885",
+          "name": "boxId",
+          "type": 6,
+          "flags": 1
+        },
+        {
+          "id": "2:2872890340845866949",
+          "name": "remoteId",
+          "indexId": "4:5158352807273909585",
+          "type": 9,
+          "flags": 2080
+        },
+        {
+          "id": "3:6056289599975098738",
+          "name": "displayName",
+          "type": 9
+        },
+        {
+          "id": "4:8116365772184356510",
+          "name": "avatarUrl",
+          "type": 9
+        },
+        {
+          "id": "5:2590324081650004205",
+          "name": "about",
+          "type": 9
+        },
+        {
+          "id": "6:1840219913377694142",
+          "name": "phone",
+          "type": 9
+        },
+        {
+          "id": "7:928609658491269632",
+          "name": "syncedAt",
+          "type": 10
+        }
+      ],
+      "relations": []
+    }
+  ],
+  "lastEntityId": "4:2199208711806608846",
+  "lastIndexId": "4:5158352807273909585",
+  "lastRelationId": "0:0",
+  "lastSequenceId": "0:0",
+  "modelVersion": 5,
+  "modelVersionParserMinimum": 5,
+  "retiredEntityUids": [
+    5527418535363401398
+  ],
+  "retiredIndexUids": [],
+  "retiredPropertyUids": [
+    3250859447933869062,
+    7427969346940499839,
+    3025735318976686515,
+    9218551282888717741,
+    8814657912898268569,
+    391579194677055119,
+    811992128867728979,
+    670489297499149293,
+    2226422449242476144,
+    766945506193205078,
+    8537677929592609781,
+    6367708458010656844,
+    3883194769521480696,
+    8278029054195726173
+  ],
+  "retiredRelationUids": [],
+  "version": 1
+}

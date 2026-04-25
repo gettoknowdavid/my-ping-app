@@ -172,7 +172,7 @@ class PhoneChangeStep2Route extends GoRouteData with $PhoneChangeStep2Route {
   }
 }
 
-class MessageThreadRoute extends GoRouteData with $ChatThreadRoute {
+class MessageThreadRoute extends GoRouteData with $MessageThreadRoute {
   const MessageThreadRoute(this.conversationId);
 
   final String conversationId;

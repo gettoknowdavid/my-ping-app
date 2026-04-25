@@ -9,12 +9,12 @@ import 'package:ping/features/chats/services/_services.dart';
 class ConversationsManager implements Disposable {
   ConversationsManager({
     required ConversationService service,
-    required DatabaseService db,
+    required RemoteService db,
   }) : _service = service,
        _db = db;
 
   final ConversationService _service;
-  final DatabaseService _db;
+  final RemoteService _db;
 
   final conversations = ListNotifier<ConversationProxy>(data: []);
   final isLoading = ValueNotifier<bool>(false);

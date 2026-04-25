@@ -16,10 +16,10 @@ void configureCoreDependencies() {
     );
   });
   di.registerSingleton<ToastManager>(ToastManager());
-  di.registerSingletonAsync<DatabaseService>(DatabaseService.initialize);
+  di.registerSingletonAsync<RemoteService>(RemoteService.initialize);
   di.registerSingletonAsync<AuthService>(() async {
-    return AuthService(di<DatabaseService>());
-  }, dependsOn: [DatabaseService]);
+    return AuthService(di<RemoteService>());
+  }, dependsOn: [RemoteService]);
   di.registerSingletonAsync<AuthManager>(() async {
     final manager = AuthManager(
       service: di<AuthService>(),

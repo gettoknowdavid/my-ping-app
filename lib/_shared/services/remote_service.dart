@@ -5,13 +5,13 @@ import 'package:ping/_ping.dart';
 import 'package:ping/features/auth/model/_model.dart';
 import 'package:ping/features/chats/model/_model.dart';
 
-class DatabaseService {
-  DatabaseService._();
+class RemoteService {
+  RemoteService._();
 
   late final SupabaseClient _client;
 
-  static Future<DatabaseService> initialize() async {
-    final service = DatabaseService._();
+  static Future<RemoteService> initialize() async {
+    final service = RemoteService._();
     await Supabase.initialize(
       url: Env.supabaseUrl,
       anonKey: Env.supabasePublishableKey,

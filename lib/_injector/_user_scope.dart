@@ -19,16 +19,16 @@ abstract class UserScope {
       init: (scope) {
         scope.registerSingleton<Profile>(profile);
         scope.registerLazySingleton<ContactsService>(() {
-          return ContactsService(di<DatabaseService>());
+          return ContactsService(di<RemoteService>());
         });
         scope.registerSingletonWithDependencies<ProfileService>(() {
-          return ProfileService(db: di<DatabaseService>(), userId: profile.id);
-        }, dependsOn: [DatabaseService]);
+          return ProfileService(db: di<RemoteService>(), userId: profile.id);
+        }, dependsOn: [RemoteService]);
         scope.registerSingletonAsync<ConversationService>(() async {
-          return ConversationService(di<DatabaseService>());
+          return ConversationService(di<RemoteService>());
         });
         scope.registerSingletonAsync<MessageService>(() async {
-          return MessageService(di<DatabaseService>());
+          return MessageService(di<RemoteService>());
         });
 
         scope.registerSingletonAsync<ProfileManager>(() async {
@@ -43,10 +43,10 @@ abstract class UserScope {
         scope.registerSingletonAsync<ConversationsManager>(
           () async => ConversationsManager(
             service: di<ConversationService>(),
-            db: di<DatabaseService>(),
+            db: di<RemoteService>(),
           ),
           onCreated: (manager) async => manager.initialize(),
-          dependsOn: [ConversationService, DatabaseService],
+          dependsOn: [ConversationService, RemoteService],
           signalsReady: true,
         );
       },

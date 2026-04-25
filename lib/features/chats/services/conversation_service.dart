@@ -6,7 +6,7 @@ import 'package:ping/features/chats/model/_model.dart';
 class ConversationService {
   const ConversationService(this._db);
 
-  final DatabaseService _db;
+  final RemoteService _db;
 
   /// Fetch all conversations for the current user, ordered by most
   /// recent message

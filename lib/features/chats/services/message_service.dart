@@ -7,7 +7,7 @@ import 'package:ping/features/chats/model/_model.dart';
 class MessageService {
   const MessageService(this._db);
 
-  final DatabaseService _db;
+  final RemoteService _db;
 
   /// Fetch paginated messages for a conversation newest first, cursor-based
   /// pagination

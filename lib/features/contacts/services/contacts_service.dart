@@ -7,7 +7,7 @@ import 'package:ping/features/contacts/model/_model.dart';
 class ContactsService {
   const ContactsService(this._db);
 
-  final DatabaseService _db;
+  final RemoteService _db;
 
   Future<ContactResult?> findByPhone(String phone) async {
     try {

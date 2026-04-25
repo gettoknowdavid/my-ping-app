@@ -5,11 +5,11 @@ import 'package:ping/_shared/_shared.dart';
 import 'package:ping/features/auth/model/_model.dart';
 
 class ProfileService {
-  ProfileService({required DatabaseService db, required String userId})
+  ProfileService({required RemoteService db, required String userId})
     : _db = db,
       _id = userId;
 
-  final DatabaseService _db;
+  final RemoteService _db;
   final String _id;
 
   Future<Profile?> fetchProfile(String userId) async {

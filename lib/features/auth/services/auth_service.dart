@@ -7,7 +7,7 @@ import 'package:ping/features/auth/model/_model.dart';
 class AuthService {
   AuthService(this._db);
 
-  final DatabaseService _db;
+  final RemoteService _db;
 
   String? get activeUserId => _db.client.auth.currentUser?.id;
 

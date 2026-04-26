@@ -25,10 +25,16 @@ abstract class UserScope {
           return ProfileService(db: di<RemoteService>(), userId: profile.id);
         }, dependsOn: [RemoteService]);
         scope.registerSingletonAsync<ConversationService>(() async {
-          return ConversationService(di<RemoteService>());
+          return ConversationService(
+            local: di<LocalService>(),
+            remote: di<RemoteService>(),
+          );
         });
         scope.registerSingletonAsync<MessageService>(() async {
-          return MessageService(di<RemoteService>());
+          return MessageService(
+            local: di<LocalService>(),
+            remote: di<RemoteService>(),
+          );
         });
 
         scope.registerSingletonAsync<ProfileManager>(() async {

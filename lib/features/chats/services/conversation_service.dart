@@ -4,15 +4,20 @@ import 'package:ping/features/auth/model/profile.dart';
 import 'package:ping/features/chats/model/_model.dart';
 
 class ConversationService {
-  const ConversationService(this._db);
+  const ConversationService({
+    required RemoteService remote,
+    required LocalService local,
+  }) : _remote = remote,
+       _local = local;
 
-  final RemoteService _db;
+  final RemoteService _remote;
+  final LocalService _local;
 
   /// Fetch all conversations for the current user, ordered by most
   /// recent message
   Future<List<Conversation>> fetchConversations() async {
     try {
-      final response = await _db.conversations.select().order(
+      final response = await _remote.conversations.select().order(
         Conversation.cLastMessageAt,
         ascending: false,
       );
@@ -29,7 +34,7 @@ class ConversationService {
   /// Get or create a one-on-one conversation via RPC
   Future<String> getOrCreateConversation(String otherProfileId) async {
     try {
-      final response = await _db.client.rpc<dynamic>(
+      final response = await _remote.client.rpc<dynamic>(
         'get_or_create_conversation',
         params: {'other_profile_id': otherProfileId},
       );
@@ -52,10 +57,10 @@ class ConversationService {
 
       data[Conversation.cGroupName] = groupName;
       data[Conversation.cType] = ConversationType.group.name;
-      data[Conversation.cCreatorId] = _db.client.auth.currentUser!.id;
+      data[Conversation.cCreatorId] = _remote.client.auth.currentUser!.id;
       if (avatarUrl != null) data[Conversation.cAvatarUrl] = avatarUrl;
 
-      final conversationResponse = await _db.conversations
+      final conversationResponse = await _remote.conversations
           .insert(data)
           .select()
           .single();
@@ -80,7 +85,7 @@ class ConversationService {
     try {
       final admin = ConversationMember.admin(
         conversationId: conversationId,
-        profileId: _db.client.auth.currentUser!.id,
+        profileId: _remote.client.auth.currentUser!.id,
       );
 
       final otherMembers = memberIds
@@ -93,7 +98,7 @@ class ConversationService {
           .toList();
 
       final members = [admin, ...otherMembers];
-      return _db.conversationMembers.insert(members);
+      return _remote.conversationMembers.insert(members);
     } on PostgrestException catch (e) {
       throw PingException(e.message);
     } on Exception catch (e) {
@@ -104,7 +109,7 @@ class ConversationService {
   /// Fetch members of a conversation
   Future<List<ConversationMember>> fetchMembers(String conversationId) async {
     try {
-      final response = await _db.client
+      final response = await _remote.client
           .from(ConversationMember.tableName)
           .select()
           .eq(Conversation.cId, conversationId);
@@ -122,17 +127,17 @@ class ConversationService {
   Future<void> markAllAsRead(String conversationId) async {
     try {
       final lastReadAt = DateTime.now().toUtc().toIso8601String();
-      final profileId = _db.client.auth.currentUser!.id;
+      final profileId = _remote.client.auth.currentUser!.id;
 
       // Update last_read_at for current user
-      await _db.client
+      await _remote.client
           .from(ConversationMember.tableName)
           .update({ConversationMember.cLastReadAt: lastReadAt})
           .eq('conversation_id', conversationId)
           .eq('profile_id', profileId);
 
       // Update read_at on all unread receipts
-      await _db.client
+      await _remote.client
           .from(MessageReceipt.tableName)
           .update({MessageReceipt.cReadAt: lastReadAt})
           .eq(MessageReceipt.cProfileId, profileId)
@@ -148,8 +153,8 @@ class ConversationService {
   RealtimeChannel subscribeToConversations({
     required void Function(Conversation) onUpdate,
   }) {
-    final profileId = _db.client.auth.currentUser!.id;
-    return _db.client
+    final profileId = _remote.client.auth.currentUser!.id;
+    return _remote.client
         .channel('${Conversation.tableName}:$profileId')
         .onPostgresChanges(
           event: PostgresChangeEvent.update,
@@ -166,7 +171,7 @@ class ConversationService {
   /// Fetch all items from the `conversations_list` view
   Future<List<ConversationListItemModel>> fetchConversationListItems() async {
     try {
-      final response = await _db.conversationsView.select().order(
+      final response = await _remote.conversationsView.select().order(
         'last_message_at',
         ascending: false,
         nullsFirst: false,
@@ -188,7 +193,7 @@ class ConversationService {
     String conversationId,
   ) async {
     try {
-      final response = await _db.conversationsView
+      final response = await _remote.conversationsView
           .select()
           .eq('id', conversationId)
           .maybeSingle();
@@ -207,7 +212,7 @@ class ConversationService {
     String currentUserId,
   ) async {
     try {
-      final response = await _db.client
+      final response = await _remote.client
           .from(ConversationMember.tableName)
           .select('profile_id, profiles(*)')
           .eq('conversation_id', conversationId)
@@ -222,5 +227,25 @@ class ConversationService {
     } on Exception catch (e) {
       throw PingException(e.toString());
     }
+  }
+
+  Stream<List<ConversationListItemModel>> watchConversations() {
+    return _local.watchConversations().map(
+      (event) => event.map(
+        (e) {
+          return ConversationListItemModel(
+            id: e.remoteId,
+            type: e.conversationType,
+            createdAt: e.createdAt,
+            groupName: e.groupName,
+            groupAvatarUrl: e.groupAvatarUrl,
+            lastMessageAt: e.lastMessageAt,
+            lastMessageContent: e.lastMessageContent,
+            lastMessageSenderId: e.lastMessageSenderId,
+            lastMessageType: e.lastMessageType,
+          );
+        },
+      ).toList(),
+    );
   }
 }

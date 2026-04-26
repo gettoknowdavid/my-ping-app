@@ -22,7 +22,6 @@ class ChatManager implements Disposable {
 
     initializeCommand = .createAsyncNoParamNoResult(() async {
       _subscribeToRealtimeChannels();
-      await _loadInitialMessages();
       await _conversationService.markAllAsRead(_conversationId);
     }, errorFilter: const GlobalIfNoLocalErrorFilter());
 
@@ -75,35 +74,35 @@ class ChatManager implements Disposable {
   RealtimeChannel? _messagesChannel;
   RealtimeChannel? _receiptsChannel;
 
-  Future<void> _loadInitialMessages() async {
-    final fetched = await _messageService.fetchMessages(_conversationId);
-    messages.startTransAction();
-    final reversed = fetched.reversed.toList();
-    for (final message in reversed) {
-      messages.add(MessageProxy(message));
-    }
-    messages.endTransAction();
-    hasReachedStart.value = fetched.length < 30;
-  }
+  StreamSubscription<List<Message>>? _messagesSubscription;
 
   void _subscribeToRealtimeChannels() {
-    _messagesChannel = _messageService.subscribeToMessages(
-      conversationId: _conversationId,
-      onInsert: (incoming) async {
-        final proxy = MessageProxy(incoming);
-        messages.add(proxy);
-        await _messageService.markRead(incoming.id);
-        newMessageSignal.value++;
-      },
-      onUpdate: (incoming) {
-        final proxy = MessageProxy(incoming);
-        final index = messages.indexWhere((i) => i.id == proxy.id);
-        if (index != -1) {
-          messages[index] = proxy;
-          updatedMessageSignal.value++;
-        }
-      },
-    );
+    _messagesSubscription = _messageService
+        .watchMessages(_conversationId)
+        .listen((incoming) {
+          messages.startTransAction();
+          messages.clear();
+          messages.addAll(incoming.map(MessageProxy.new));
+          messages.endTransAction();
+        });
+
+    // _messagesChannel = _messageService.subscribeToMessages(
+    //   conversationId: _conversationId,
+    //   onInsert: (incoming) async {
+    //     final proxy = MessageProxy(incoming);
+    //     messages.add(proxy);
+    //     await _messageService.markRead(incoming.id);
+    //     newMessageSignal.value++;
+    //   },
+    //   onUpdate: (incoming) {
+    //     final proxy = MessageProxy(incoming);
+    //     final index = messages.indexWhere((i) => i.id == proxy.id);
+    //     if (index != -1) {
+    //       messages[index] = proxy;
+    //       updatedMessageSignal.value++;
+    //     }
+    //   },
+    // );
 
     _receiptsChannel = _messageService.subscribeToReceipts(
       conversationId: _conversationId,
@@ -123,6 +122,9 @@ class ChatManager implements Disposable {
 
   @override
   Future<dynamic> onDispose() async {
+    await _messagesSubscription?.cancel();
+    _messagesSubscription = null;
+
     await _messagesChannel?.unsubscribe();
     await _receiptsChannel?.unsubscribe();
 

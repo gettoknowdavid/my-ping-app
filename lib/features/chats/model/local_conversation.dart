@@ -5,6 +5,7 @@ import 'package:ping/features/chats/model/_model.dart';
 class LocalConversation {
   LocalConversation({
     required this.remoteId,
+    required this.createdAt,
     required this.syncedAt,
     this.boxId = 0,
     this.groupName,
@@ -37,6 +38,9 @@ class LocalConversation {
 
   @Property(type: PropertyType.dateUtc)
   DateTime? lastMessageAt;
+
+  @Property(type: PropertyType.dateUtc)
+  DateTime createdAt;
 
   @Property(type: PropertyType.dateUtc)
   DateTime syncedAt;

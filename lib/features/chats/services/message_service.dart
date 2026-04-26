@@ -5,9 +5,14 @@ import 'package:ping/_shared/_shared.dart';
 import 'package:ping/features/chats/model/_model.dart';
 
 class MessageService {
-  const MessageService(this._db);
+  const MessageService({
+    required RemoteService remote,
+    required LocalService local,
+  }) : _remote = remote,
+       _local = local;
 
-  final RemoteService _db;
+  final RemoteService _remote;
+  final LocalService _local;
 
   /// Fetch paginated messages for a conversation newest first, cursor-based
   /// pagination
@@ -20,7 +25,7 @@ class MessageService {
       // Resolve cursor timestamp first if needed
       String? cursorTimestamp;
       if (beforeId != null) {
-        final cursorMessage = await _db.client
+        final cursorMessage = await _remote.client
             .from(Message.tableName)
             .select(Message.cCreatedAt)
             .eq(Message.cId, beforeId)
@@ -29,7 +34,7 @@ class MessageService {
       }
 
       // Build the full query — filters before transforms
-      var query = _db.messages.select().eq(
+      var query = _remote.messages.select().eq(
         Message.cConversationId,
         conversationId,
       );
@@ -65,12 +70,12 @@ class MessageService {
     try {
       final data = <String, dynamic>{};
       data[Message.cConversationId] = conversationId;
-      data[Message.cSenderId] = _db.client.auth.currentUser!.id;
+      data[Message.cSenderId] = _remote.client.auth.currentUser!.id;
       data[Message.cType] = MessageType.text.name;
       data['content'] = content;
       if (replyToId != null) data[Message.cReplyToId] = replyToId;
 
-      final response = await _db.messages.insert(data).select().single();
+      final response = await _remote.messages.insert(data).select().single();
 
       return Message.fromJson(response);
     } on PostgrestException catch (e) {
@@ -92,7 +97,7 @@ class MessageService {
   }) async {
     try {
       final data = <String, dynamic>{};
-      data[Message.cSenderId] = _db.client.auth.currentUser!.id;
+      data[Message.cSenderId] = _remote.client.auth.currentUser!.id;
       data[Message.cConversationId] = conversationId;
       data[Conversation.cType] = type.name;
       data[Message.cMediaUrl] = mediaUrl;
@@ -101,7 +106,7 @@ class MessageService {
       if (mediaSize != null) data[Message.cMediaSize] = mediaSize;
       if (replyToId != null) data[Message.cReplyToId] = replyToId;
 
-      final response = await _db.messages.insert(data).select().single();
+      final response = await _remote.messages.insert(data).select().single();
 
       return Message.fromJson(response);
     } on PostgrestException catch (e) {
@@ -114,7 +119,7 @@ class MessageService {
   /// Soft delete a message
   Future<void> deleteMessage(String messageId) async {
     try {
-      await _db.messages
+      await _remote.messages
           .update({
             'is_deleted': true,
             'deleted_at': DateTime.now().toUtc().toIso8601String(),
@@ -132,9 +137,9 @@ class MessageService {
   /// Mark a message as delivered for the current user
   Future<void> markDelivered(String messageId) async {
     try {
-      await _db.messageReceipts.upsert({
+      await _remote.messageReceipts.upsert({
         MessageReceipt.cMessageId: messageId,
-        MessageReceipt.cProfileId: _db.client.auth.currentUser!.id,
+        MessageReceipt.cProfileId: _remote.client.auth.currentUser!.id,
         MessageReceipt.cDeliveredAt: DateTime.now().toUtc().toIso8601String(),
       });
     } on PostgrestException catch (e) {
@@ -147,9 +152,9 @@ class MessageService {
   /// Mark a message as read for the current user
   Future<void> markRead(String messageId) async {
     try {
-      await _db.messageReceipts.upsert({
+      await _remote.messageReceipts.upsert({
         MessageReceipt.cMessageId: messageId,
-        MessageReceipt.cProfileId: _db.client.auth.currentUser!.id,
+        MessageReceipt.cProfileId: _remote.client.auth.currentUser!.id,
         MessageReceipt.cDeliveredAt: DateTime.now().toUtc().toIso8601String(),
         MessageReceipt.cReadAt: DateTime.now().toUtc().toIso8601String(),
       });
@@ -174,7 +179,7 @@ class MessageService {
       value: conversationId,
     );
 
-    return _db.client
+    return _remote.client
         .channel('messages:$conversationId')
         .onPostgresChanges(
           event: .insert,
@@ -193,12 +198,32 @@ class MessageService {
         .subscribe();
   }
 
+  Stream<List<Message>> watchMessages(String conversationId) {
+    return _local
+        .watchMessages(conversationId)
+        .map(
+          (event) => event.map(
+            (e) {
+              return Message(
+                id: e.remoteId,
+                conversationId: conversationId,
+                senderId: e.senderId,
+                isDeleted: e.isDeleted,
+                createdAt: e.createdAt,
+                updatedAt: e.createdAt,
+                type: e.type,
+              );
+            },
+          ).toList(),
+        );
+  }
+
   /// Realtime subscription for receipt updates
   RealtimeChannel subscribeToReceipts({
     required String conversationId,
     required void Function(MessageReceipt) onUpdate,
   }) {
-    return _db.client
+    return _remote.client
         .channel('receipts:$conversationId')
         .onPostgresChanges(
           event: PostgresChangeEvent.all,

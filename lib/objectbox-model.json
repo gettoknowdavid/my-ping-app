@@ -91,7 +91,7 @@
     },
     {
       "id": "3:9135828903573834691",
-      "lastPropertyId": "11:555204447503538379",
+      "lastPropertyId": "13:2144712472526939434",
       "name": "LocalConversation",
       "properties": [
         {
@@ -146,6 +146,11 @@
           "id": "11:555204447503538379",
           "name": "dbLastMessageType",
           "type": 6
+        },
+        {
+          "id": "13:2144712472526939434",
+          "name": "createdAt",
+          "type": 10
         }
       ],
       "relations": []
@@ -198,7 +203,7 @@
     }
   ],
   "lastEntityId": "4:2199208711806608846",
-  "lastIndexId": "4:5158352807273909585",
+  "lastIndexId": "5:7604782308580482427",
   "lastRelationId": "0:0",
   "lastSequenceId": "0:0",
   "modelVersion": 5,
@@ -206,7 +211,9 @@
   "retiredEntityUids": [
     5527418535363401398
   ],
-  "retiredIndexUids": [],
+  "retiredIndexUids": [
+    7604782308580482427
+  ],
   "retiredPropertyUids": [
     3250859447933869062,
     7427969346940499839,
@@ -221,7 +228,8 @@
     8537677929592609781,
     6367708458010656844,
     3883194769521480696,
-    8278029054195726173
+    8278029054195726173,
+    3537683146375501748
   ],
   "retiredRelationUids": [],
   "version": 1

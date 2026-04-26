@@ -7,7 +7,6 @@ class LocalMessage {
     required this.remoteId,
     required this.conversationId,
     required this.senderId,
-    required this.type,
     required this.createdAt,
     required this.syncedAt,
     this.boxId = 0,
@@ -32,7 +31,7 @@ class LocalMessage {
   String senderId;
 
   @Transient()
-  MessageType type;
+  MessageType type = .text;
 
   bool isDeleted;
 

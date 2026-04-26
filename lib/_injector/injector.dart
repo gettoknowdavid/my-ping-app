@@ -17,6 +17,7 @@ void configureCoreDependencies() {
   });
   di.registerSingleton<ToastManager>(ToastManager());
   di.registerSingletonAsync<RemoteService>(RemoteService.initialize);
+  di.registerSingletonAsync<LocalService>(LocalService.create);
   di.registerSingletonAsync<AuthService>(() async {
     return AuthService(di<RemoteService>());
   }, dependsOn: [RemoteService]);

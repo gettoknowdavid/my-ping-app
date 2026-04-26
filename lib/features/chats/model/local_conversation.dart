@@ -5,7 +5,6 @@ import 'package:ping/features/chats/model/_model.dart';
 class LocalConversation {
   LocalConversation({
     required this.remoteId,
-    required this.conversationType,
     required this.syncedAt,
     this.boxId = 0,
     this.groupName,
@@ -23,7 +22,7 @@ class LocalConversation {
   String remoteId;
 
   @Transient()
-  ConversationType conversationType;
+  ConversationType conversationType = .direct;
 
   String? groupName;
 
